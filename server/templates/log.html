@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{%block body%}
+
+
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<a class="navbar-brand" href="/">dasheng-robot</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item ">
+      <a class="nav-link" href="/">会话</a>
+    </li>
+    <li class="nav-item ">
+      <a class="nav-link" href="/config">配置</a>
+    </li> 
+    <li class="nav-item active">
+      <a class="nav-link" href="/log">日志<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/response">唤醒</a>
+    </li>   
+  </ul>
+
+</div>
+</nav>
+
+<main role="main">
+
+
+
+<div class="container">
+  <div class="alert alert-info" role="alert">
+    <i class="fa fa-bell"></i> 日志不会自动刷新，要查看最新日志，请点击【刷新日志】按钮。
+  </div>
+
+  <label for="log-input">日志内容</label>
+  <form class="form log-form" action="#">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">dasheng.log</span>
+      </div>
+      <textarea rows=15 class="form-control" aria-label="dasheng.log" id="log-input" readonly>{{log}}</textarea>
+    </div>
+
+    <hr>
+    <center>
+      <button type="submit" class="btn btn-primary mb-2 REFRESH">刷新日志</button>
+    </center> 
+  </form>
+</div> <!-- /container -->
+
+</main>
+<div class ="footer" >
+  <center>
+    <span class= "text-muted">dasheng &copy;2020</span>
+  </center>
+    
+</div>
+{%end%}
+
+
+

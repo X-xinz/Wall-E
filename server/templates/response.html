@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{%block body%}
+
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="/">dasheng-robot</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item ">
+        <a class="nav-link" href="/">会话</a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link" href="/config">配置</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/log">日志</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/response">唤醒<span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+</br>
+<main role="main">
+  
+
+  <div class="container response ">
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 600px;height:400px;margin: 40px 40px 40px 40px;background-color:rgb(241, 241, 233); "></div>
+    <script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById('main'));      
+
+      option = {
+        baseOption: {
+          aria: {
+            show: true
+          },
+          title: {
+            text: '本周唤醒次数'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            data: ['keyword', 'tts', 'asr', 'robot', 'plugs']
+          },
+          grid: {
+            x: 80,
+            y: 60,
+            x2: 80,
+            y2: 60,
+            backgroundColor: 'rgba(7,0,0,0)',
+            borderWidth: 1,
+            borderColor: '#ccc'
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: true,
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: 'keyword',
+              type: 'line',
+              stack: '总量',
+              data: {{ plugs[0] }} 
+            },
+            {
+              name: 'tts',
+              type: 'line',
+              stack: '总量',
+              data: {{ plugs[1] }}
+            },
+            {
+              name: 'asr',
+              type: 'line',
+              stack: '总量',
+              data:{{ plugs[2] }}
+            },
+            {
+              name: 'robot',
+              type: 'line',
+              stack: '总量',
+              data: {{ plugs[3] }}
+            },
+            {
+              name: 'plugs',
+              type: 'line',
+              stack: '总量',
+              data:{{ plugs[4] }}
+            }
+          ]
+          },
+
+            
+        };
+      myChart.setOption(option);
+
+
+    </script>
+  </div> <!-- /container -->
+
+</main>
+<div class="footer">
+  <center>
+    <span class="text-muted">dasheng &copy;2020</span>
+  </center>
+
+</div>
+{%end%}

@@ -1,0 +1,39 @@
+Weather:
+  location: '巧家'
+
+snowboy:
+  hotwork: 'snowboy/resources/snowboy.umdl'
+  sensitivity: '0.4'
+
+server:
+  port: '1037'
+  password: 'hust'
+  debug: "True" 
+#debug:是否开启服务器调试                
+   
+tts: 'X'   
+#B:百度tts  X:讯飞tts                      
+
+
+xunfei_API:
+  appid: '5e3b849b'
+  apikey: '12ee3473d8973cba864565dafda14758'
+  APISecret: 'a96a265db24fde37211b5203796f35fe'
+
+tuling_robot:
+  api_key: 'e2cd5cabca5a40618b53779b5fe197c5'
+
+Baidu_tts:
+  api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
+  secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
+  SPD: 5                  
+  PIT: 5                  
+  VOL: 5                 
+  AUE: 3                  
+  PER: 0 
+#语速，取值0-15，默认为5中语速
+#音调，取值0-15，默认为5中语调
+#音量，取值0-15，默认为5中音量
+#3为mp3格式(默认)； 4为pcm-16k；5为pcm-8k；6为wav（内容同pcm-16k）
+#度小宇=1，度小美=0，度逍遥=3，度丫丫=4 默认为度小美
+#度博文=106，度小童=110，度小萌=111，度米朵=103，度小娇=5                 
