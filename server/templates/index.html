@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% autoescape None %}
+{%block body%}
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+<!-- Custom styles for this template -->
+<link href="{{static_url('starter-template.css')}}" rel="stylesheet">
+<link href="{{static_url('bubble.css')}}" rel="stylesheet">
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="/">dasheng-robot</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">会话<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/config">配置</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/log">日志</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/response">唤醒</a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+<div class="bgimg">
+  <main role="main">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1 class="display-2">
+          <img src="{{static_url('pic/dasheng.png')}}" width=137px>Dasheng-robot
+        </h1>
+        <p>dasheng-robot是一个诞生于庚子年春的语音对话机器人！我还小，但是我什么都能干哟！</p>
+      </div>
+    </div>
+
+    <div class="container history" id="container">
+      {% if not history or len(history)==0 %}
+      <center>
+        <p>无聊天记录，请先和我聊天吧~</p>
+      </center>
+      {% else %}
+      {% for h in history %}
+      {% if h['type']== 0 %}
+      {% comment  用户说的话 %}
+      <div class="right">
+        <div class="bubble bubble-green">
+          <div class="bubble-avatar"><i class="fa fa-user" style="font-size:48px"></i></i></div>
+          <p style="text-align: left" id="{{ h['uuid'] }}">{{ h['text'] }}</p>
+        </div>
+      </div>
+      {% else %}
+      {% comment  机器人说的话 %}
+      <div class="left">
+        <div class="bubble bubble-white">
+          <div class="bubble-avatar"><img src="{{static_url('pic/dasheng.png')}}" width=56px></div>
+          <p style="text-align: left" id="{{ h['uuid'] }}">{{ h['text'] }}</p>
+        </div>
+      </div>
+      {%end%}
+      {%end%}
+      {%end%}
+
+    </div> <!-- /container -->
+
+    <br />
+
+    <div class="container query-form">
+      <center>
+        <form class="form-inline" action="#">
+          <label for="query" class="col-form-label">说句话:</label>
+          <div class="col">
+            <input type="text" class="form-control-plaintext" id="query" placeholder="今天天气怎么样">
+          </div>
+          <button type="submit" class="btn btn-primary mb-2 CHAT">发送</button>
+        </form>
+      </center>
+
+  </main>
+
+  <div class="footer">
+    <center>
+      <span class="text-muted">dasheng &copy;2020</span>
+    </center>
+
+  </div>
+
+  {%end%}

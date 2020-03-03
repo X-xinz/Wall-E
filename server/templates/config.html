@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{%block body%}
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<a class="navbar-brand" href="/">dasheng-robot</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item ">
+      <a class="nav-link" href="/">会话</a>
+    </li>
+    <li class="nav-item active">
+      <a class="nav-link" href="/config">配置<span class="sr-only">(current)</span></a>
+    </li> 
+    <li class="nav-item">
+      <a class="nav-link" href="/log">日志</a>
+    </li> 
+    <li class="nav-item">
+      <a class="nav-link" href="/response">唤醒</a>
+    </li>     
+  </ul>
+
+</div>
+</nav>
+
+<main role="main">
+
+  <div class="container config">
+    <label for="config-input">配置内容</label>
+    <form class="form config-form" action="#">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">config.yml</span>
+        </div>
+        <textarea rows=25 class="form-control" aria-label="config.yml" id="config-input">{{config}}</textarea>
+      </div>
+
+      <hr>
+      <center>
+        <button type="button" class="btn btn-primary mb-2 SAVE"><i class="fa fa-save"></i>保存</button>
+        <button type="button" class="btn btn-danger mb-2 RESTART"><i class="fa fa-power-off"></i>重启</button>
+      </center> 
+    </form>
+    
+  </div> <!-- /container -->
+
+</main>
+<div class ="footer" >
+  <center>
+    <span class= "text-muted">dasheng &copy;2020</span>
+  </center>
+    
+</div>
+
+{%end%}
+
+
+
