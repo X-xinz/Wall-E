@@ -7,9 +7,5 @@ then
 fi
 source env/bin/activate
 
-<<<<<<< HEAD
 python3 wukong.py
-=======
-phddns start
->>>>>>> cdc3b8f67d0839db1ca879570415d970ebd6921f
 
