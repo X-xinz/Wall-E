@@ -55,7 +55,7 @@ function getHistory(){
     });
 }
 
-
+//ceshi
 $(function() {
     setInterval('getHistory();', 5000);
     $('.CHAT').on('click', function(e) {
