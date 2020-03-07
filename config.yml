@@ -2,8 +2,9 @@ Weather:
   location: '巧家'
 
 snowboy:
-  hotwork: 'snowboy/resources/snowboy.umdl'
+  hotwork: 'snowboy/resources/wukong.pmdl'
   sensitivity: '0.4'
+#hotwork:可选sonwboy.umdl,wukong.pmdl,贾维斯.pmdl
 
 server:
   port: '1037'
@@ -14,6 +15,8 @@ server:
 tts: 'X'   
 #B:百度tts  X:讯飞tts                      
 
+LocalPlayer:
+  path: "/home/yxz/music"
 
 xunfei_API:
   appid: '5e3b849b'
@@ -36,4 +39,4 @@ Baidu_tts:
 #音量，取值0-15，默认为5中音量
 #3为mp3格式(默认)； 4为pcm-16k；5为pcm-8k；6为wav（内容同pcm-16k）
 #度小宇=1，度小美=0，度逍遥=3，度丫丫=4 默认为度小美
-#度博文=106，度小童=110，度小萌=111，度米朵=103，度小娇=5                 
+#度博文=106，度小童=110，度小萌=111，度米朵=103，度小娇=5

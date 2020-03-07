@@ -1,12 +1,13 @@
-from snowboy import snowboydecoder
-import sys
+import os
 import signal
+import sys
+
+import yaml
+
+from robot import ASR, TTS, Player, config, constants, logging, statistic
+from robot.Conversation import Conversation
 from server import server
-import os,yaml
-from robot import TTS,ASR,Player,config,constants,logging,statistic
-from  robot.Conversation import Conversation
-
-
+from snowboy import snowboydecoder
 logger = logging.getLogger(__name__)
 
 interrupted = False
