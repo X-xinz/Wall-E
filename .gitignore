@@ -105,3 +105,5 @@ venv.bak/
 .DS_Store
 .vscode
 robot
+text.py
+outfile/response.db
