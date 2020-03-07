@@ -6,7 +6,7 @@ import os
 import requests
 import uuid
 from robot.Brain import Brain
-from robot import logging,statistic,config,pcm_to_wav
+from robot import logging,statistic,config,utils,constants
 
 logger = logging.getLogger(__name__)
 
@@ -43,14 +43,14 @@ class Conversation(object):
         if config.get('/tts','B') =='B':
             tts = TTS.BaiduTTS()        
             tts.get_speach(respons)
-            statistic.set(1)
-            
+            statistic.set(1)            
             self.player.play('result.mp3',True)
         else:
             tts =TTS.XunFeiTTS()
             tts.get_speach(respons)
             statistic.set(1)
-            pcm_to_wav.p_t_W()
+            utils.p_t_W(constants.PCM_PATH)
+            utils.check_and_delete(constants.PCM_PATH)
             self.player.play('outfile/xunfei.wav',True)
 
     def getHistory(self):
