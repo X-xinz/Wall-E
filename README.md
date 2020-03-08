@@ -40,7 +40,7 @@ wcwidth            0.1.8
 websocket          0.2.1     
 websocket-client   0.57.0    
 wrapt              1.11.2    
-zipp               3.0.0  
+ 
 
 
 ## 启动开发环境
