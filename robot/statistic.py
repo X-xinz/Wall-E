@@ -22,11 +22,14 @@ def utils(f,name,week):
     daynow = (datetime.datetime.now())
     dd=f[name]['date']
     dayold = datetime.datetime.strptime(str(dd),'%Y-%m-%d')
+    print(week)
     days=(daynow-dayold).days
+    logger.debug('相差{}天'.format(days))
     if days != date[week]:
         adays = f[name][week]+1
         delta = datetime.timedelta(adays)
         ndays = (daynow - delta).strftime('%Y-%m-%d')
+        logger.debug('今天的日期是{}'.format(ndays))
         if name in f.keys():   
             f[name]["Mon"] =0
             f[name]["Tue"] =0
@@ -74,5 +77,6 @@ def get_numb():
             robot = (list(f['robot'].values()))[0:7]
             plugs = (list(f['plugs'].values()))[0:7]
             RESULT=(k,tts,a,robot,plugs)
+            print (f['keyword'])
             return RESULT
 

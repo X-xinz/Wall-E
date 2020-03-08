@@ -7,6 +7,23 @@ from uuid import getnode as get_mac
 APP_PATH = os.path.normpath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     os.pardir))
+
+ 
+LIB_PATH = os.path.join(APP_PATH, "robot")
+DATA_PATH = os.path.join(APP_PATH, "static")
+TEMP_PATH = os.path.join(APP_PATH, "temp")
+TEMPLATE_PATH = os.path.join(APP_PATH, "server", "templates")
+PLUGIN_PATH = os.path.join(APP_PATH, "plugins")
+DEFAULT_CONFIG_NAME = 'default.yml'
+CUSTOM_CONFIG_NAME = 'config.yml'
+
+CONTRIB_PATH = os.path.expanduser(
+    os.getenv('WUKONG_CONFIG', '~/.wukong/contrib')
+)
+CUSTOM_PATH = os.path.expanduser(
+    os.getenv('WUKONG_CONFIG', '~/.wukong/custom')
+)
+
 CONFIG_PATH = 'config.yml'
 LOGGING_PATH = 'outfile/wukong.log'
 DB_PATH ='outfile/response.db'
@@ -22,7 +39,7 @@ tuling_robot_URL = "http://openapi.tuling123.com/openapi/api/v2"
 
 mac_id =str(get_mac())[:32]              #cuid,身份识别符
 
-LOG = 'INFO'                     #log 打印等级（debug/info)
+LOG = 'DEBUG'                     #log 打印等级（debug/info)
 
 def getConfigPath():
     """
