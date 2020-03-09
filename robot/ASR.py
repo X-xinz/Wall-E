@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from abc import ABCMeta, abstractmethod
 import websocket
 import datetime
 import hashlib
@@ -93,13 +94,13 @@ def on_message(ws, message):
             gresult = gresult + result
             #logger.debug("sid:%s call success!,data is:%s" % (sid, json.dumps(data, ensure_ascii=False)))
     except Exception as e:
-        logger.debug("receive msg,but parse exception:", e)
+        logger.debug("receive msg,but parse exception:%s"%(e))
 
 
 
 # 收到websocket错误的处理
 def on_error(ws, error):
-    logger.debug("### error:", error)
+    logger.debug("### error:%s"%(error))
 
 
 # 收到websocket关闭的处理
@@ -154,18 +155,35 @@ def on_open(ws):
         ws.close()
 
     thread.start_new_thread(run, ())
-class AbstactASR(object):
+class AbstractASR(object):
 
-    def transcribe(self,fpath):
+    __metaclass__ = ABCMeta
+
+    @classmethod
+    def get_config(cls):
+        return {}
+
+    @classmethod
+    def get_instance(cls):
+        profile = cls.get_config()
+        instance = cls(**profile)
+        return instance
+
+    @abstractmethod
+    def transcribe(self, fp):
         pass
 
-class XunfeiASR(AbstactASR):
+class XunfeiASR(AbstractASR):
 
-    SLUG='xunfei-Asr'
+    SLUG='xunfei-asr'
+    def __init__(self,appid,apikey,apisecret,**arges):
+        self.appid=appid
+        self.apikey=apikey
+        self.apisecret=apisecret
 
-    def __init__(self):
-        self.appid = config.get('/xunfei_API/appid','5e3b849b')
-        self.apikey = config.get('/xunfei_API/apikey','12ee3473d8973cba864565dafda14758')
+    @classmethod
+    def get_config(cls):
+        return config.get('/xunfei_API',{})
 
     def transcribe(self,fpath):
         '''
@@ -175,9 +193,7 @@ class XunfeiASR(AbstactASR):
         global gresult
         gresult = ''
         time1 = datetime.now()
-        wsParam = Ws_Param(APPID = self.appid,APIKey = self.apikey,
-                        APISecret=config.get('/xunfei_API/APISecret','a96a265db24fde37211b5203796f35fe'),
-                        AudioFile=fpath)
+        wsParam = Ws_Param(APPID = self.appid,APIKey = self.apikey,APISecret=self.apisecret,AudioFile=fpath)
         websocket.enableTrace(False)
         wsUrl = wsParam.create_url()
         ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close)
@@ -186,3 +202,38 @@ class XunfeiASR(AbstactASR):
         time2 = datetime.now()
         logger.debug(time2-time1)
         return gresult
+def get_engine_by_slug(slug=None):
+    """
+    Returns:
+        An ASR Engine implementation available on the current platform
+
+    Raises:
+        ValueError if no speaker implementation is supported on this platform
+    """
+
+    if not slug or type(slug) is not str:
+        raise TypeError("无效的 ASR slug '%s'", slug)
+
+    selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
+                              engine.SLUG == slug, get_engines()))
+
+    if len(selected_engines) == 0:
+        raise ValueError("错误：找不到名为 {} 的 ASR 引擎".format(slug))
+    else:
+        if len(selected_engines) > 1:
+            logger.warning("注意: 有多个 ASR 名称与指定的引擎名 {} 匹配").format(slug)
+        engine = selected_engines[0]
+        logger.info("使用 {} ASR 引擎".format(engine.SLUG))
+        return engine.get_instance()
+
+
+def get_engines():
+    def get_subclasses(cls):
+        subclasses = set()
+        for subclass in cls.__subclasses__():           #便利取类的所有子类
+            subclasses.add(subclass)
+            subclasses.update(get_subclasses(subclass))
+        return subclasses
+    return [engine for engine in
+            list(get_subclasses(AbstractASR))
+            if hasattr(engine, 'SLUG') and engine.SLUG]
