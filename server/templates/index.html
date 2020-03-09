@@ -22,7 +22,7 @@
 <link href="{{static_url('bubble.css')}}" rel="stylesheet">
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="/">dasheng-robot</a>
+  <a class="navbar-brand" href="/">WALL-E</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
     aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
 
@@ -52,12 +52,12 @@
     <div class="jumbotron">
       <div class="container">
         <h1 class="display-2">
-          <img src="{{static_url('pic/dasheng.png')}}" width=137px>Dasheng-robot
+          <img src="{{static_url('pic/wall-e.png')}}" width=137px>WALL-E
         </h1>
-        <p>dasheng-robot是一个诞生于庚子年春的语音对话机器人！我还小，但是我什么都能干哟！</p>
+        <p>WALL-E是一个诞生于庚子年春的语音对话机器人！我正在找寻我的EVA！</p>
       </div>
     </div>
-
+    
     <div class="container history" id="container">
       {% if not history or len(history)==0 %}
       <center>
@@ -77,10 +77,11 @@
       {% comment  机器人说的话 %}
       <div class="left">
         <div class="bubble bubble-white">
-          <div class="bubble-avatar"><img src="{{static_url('pic/dasheng.png')}}" width=56px></div>
+          <div class="bubble-avatar"><img src="{{static_url('pic/chat.png')}}" width=60px></div>
           <p style="text-align: left" id="{{ h['uuid'] }}">{{ h['text'] }}</p>
         </div>
       </div>
+      
       {%end%}
       {%end%}
       {%end%}
