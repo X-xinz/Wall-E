@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 
 import logging
+import os
 import subprocess
-from logging import FileHandler
+from logging.handlers import RotatingFileHandler
 from robot import constants
 
 DEBUG = logging.DEBUG
@@ -10,9 +11,12 @@ INFO = logging.INFO
 WARNING = logging.WARNING
 ERROR = logging.ERROR
 def getLogger(name):
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(name)
     logger.setLevel(constants.LOG)
-    file_handler = FileHandler(constants.LOGGING_PATH)
+    # 1MB = 1024 * 1024 bytes
+    file_handler = RotatingFileHandler(os.path.join(constants.OUTFILES_PATH, 'wukong.log'), maxBytes=1024*1024,backupCount=5)
+    file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
 
