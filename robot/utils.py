@@ -38,13 +38,22 @@ def get_pcm_from_wav(wav_path):
 
 
 
-def p_t_W(pcm_path):
+def p_t_W(pcm_path,wavname,delect=False):
+    """
+    pcm to wav
+    :param pcm_path:pcm路径
+    :param wavname:要生成的wav文件名
+    :param delect:是否删除pcm文件，默认false
+    :returns: 返回wav文件路径
+    """
     f = open(pcm_path,'rb')
     str_data  = f.read()
-    wave_out=wave.open("outfile/wav.wav",'wb')
+    wav_path = os.path.join(constants.OUTFILES_PATH,wavname)
+    wave_out=wave.open(wav_path,'wb')
     wave_out.setnchannels(1)
     wave_out.setsampwidth(2)
     wave_out.setframerate(16000)
     wave_out.writeframes(str_data)
-    check_and_delete(pcm_path)
-    return "outfile/wav.wav"
+    if delect:
+        check_and_delete(pcm_path)
+    return wav_path
