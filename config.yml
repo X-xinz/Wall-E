@@ -2,7 +2,7 @@ Weather:
   location: '巧家'
 
 snowboy:
-  hotwork: 'snowboy/resources/wukong.pmdl'
+  hotwork: 'snowboy/resources/snowboy.umdl'
   sensitivity: '0.4'
 #hotwork:可选sonwboy.umdl,wukong.pmdl,贾维斯.pmdl
 
@@ -21,7 +21,7 @@ LocalPlayer:
 xunfei_API:
   appid: '5e3b849b'
   apikey: '12ee3473d8973cba864565dafda14758'
-  APISecret: 'a96a265db24fde37211b5203796f35fe'
+  apisecret: 'a96a265db24fde37211b5203796f35fe'
 
 tuling_robot:
   api_key: 'e2cd5cabca5a40618b53779b5fe197c5'
@@ -40,3 +40,9 @@ Baidu_tts:
 #3为mp3格式(默认)； 4为pcm-16k；5为pcm-8k；6为wav（内容同pcm-16k）
 #度小宇=1，度小美=0，度逍遥=3，度丫丫=4 默认为度小美
 #度博文=106，度小童=110，度小萌=111，度米朵=103，度小娇=5
+
+
+asr_engine: 'xunfei-asr'
+tts_engine: 'xunfei-tts'
+nlu_engine: 'unit'
+robot: 'tuling'

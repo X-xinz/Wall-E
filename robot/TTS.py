@@ -8,6 +8,7 @@ import os
 import ssl
 import sys
 import time
+from abc import ABCMeta, abstractmethod
 from datetime import datetime
 from time import mktime
 from urllib.error import HTTPError
@@ -20,6 +21,9 @@ import yaml
 
 import _thread as thread
 from robot import Player, config, constants, logging
+
+from .utils import p_t_W
+
 
 """
 baidu-tts
@@ -57,54 +61,7 @@ class BDml(object):
             raise DemoError('MAYBE API_KEY or SECRET_KEY not correct: access_token or scope not found in token response')
 """  TOKEN end """
 
-class AbstactTTS(object):
-    def get_speach(self,TEXT):
-        pass
-class BaiduTTS(AbstactTTS):
-    SULG = 'Baidu_tts'
-    def __init__(self):
-        self.TTS_URL = constants.Baidu_TTS_URL
-        self.CUID = constants.get_mac          
-        self.PER = config.get('/Baidu_tts/PER',0)                   
-        self.SPD = config.get('/Baidu_tts/SPD',5)                     
-        self.PIT = config.get('/Baidu_tts/PIT',5)                   
-        self.VOL = config.get('/Baidu_tts/VOL',5)                  
-        self.AUE = config.get('/Baidu_tts/AUE',3)                     
-        FORMATS = {3: "mp3", 4: "pcm", 5: "pcm", 6: "wav"}
-        self.FORMAT = FORMATS[self.AUE]        
-    def get_speach(self,TEXT):
-        token = BDml.fetch_token(self)
-        tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
-        logger.debug(tex)
-        params = {'tok': token, 'tex': tex, 'per': self.PER, 'spd': self.SPD, 'pit': self.PIT, 'vol': self.VOL, 'aue': self.AUE, 'cuid': self.CUID,
-                'lan': 'zh', 'ctp': 1}  # lan ctp 固定参数
 
-        data = urlencode(params)
-        #logger.debug('test on Web Browser' + TTS_URL + '?' + data)
-
-        req = Request(self.TTS_URL, data.encode('utf-8'))
-        has_error = False
-        try:
-            f = urlopen(req)
-            result_str = f.read()
-
-            headers = dict((name.lower(), value) for name, value in f.headers.items())
-
-            has_error = ('content-type' not in headers.keys() or headers['content-type'].find('audio/') < 0)
-        except  HTTPError as err:
-            logger.debug('asr http response http code : ' + str(err.code))
-            result_str = err.read()
-            has_error = True
-
-        save_file = "error.txt" if has_error else 'result.' + self.FORMAT
-        with open(save_file, 'wb') as of:
-            of.write(result_str)
-
-        if has_error:            
-            result_str = str(result_str, 'utf-8')
-            logger.debug("tts api  error:" + result_str)
-
-        #logger.debug("result saved as :" + save_file)
 
 
 """xunfei-tts"""
@@ -120,11 +77,11 @@ STATUS_LAST_FRAME = 2  # 最后一帧的标识
 
 class Ws_Param(object):
     # 初始化
-    def __init__(self, APPID, APIKey, APISecret, Text):
-        self.APPID = config.get('/xunfei_API/appid','5e3b849b')
-        self.APIKey = config.get('/xunfei_API/apikey','12ee3473d8973cba864565dafda14758')
-        self.APISecret = config.get('/xunfei_API/APISecret','a96a265db24fde37211b5203796f35fe')
-        self.Text = t
+    def __init__(self, APPID, APIKey, apisecret, Text):
+        self.APPID = APPID
+        self.APIKey = APIKey
+        self.APISecret = apisecret
+        self.Text = Text
 
         # 公共参数(common)
         self.CommonArgs = {"app_id": self.APPID}
@@ -166,7 +123,6 @@ class Ws_Param(object):
         # 此处打印出建立连接时候的url,参考本demo的时候可取消上方打印的注释，比对相同参数时生成的url与自己代码生成的url是否一致
         # print('websocket url :', url)
         return url
-
 def on_message(ws, message):
     try:
         message =json.loads(message)
@@ -183,18 +139,19 @@ def on_message(ws, message):
             errMsg = message["message"]
             logger.debug("sid:%s call error:%s code is:%s" % (sid, errMsg, code))
         else:
-
-            with open('./outfile/demo.pcm', 'ab') as f:
+            with open(constants.PCM_PATH, 'ab') as f:
                 f.write(audio)
+           
+          
 
     except Exception as e:
-        logger.error("receive msg,but parse exception:", e)
+        logger.error("receive msg,but parse exception:%s"%(e))
 
 
 
 # 收到websocket错误的处理
 def on_error(ws, error):
-    logger.error("### error:", error)
+    logger.error("### error:%s"%(error))
 
 
 # 收到websocket关闭的处理
@@ -217,24 +174,151 @@ def on_open(ws):
 
     thread.start_new_thread(run, ())
 
+
+
+
+
+
+class AbstractTTS(object):
+    __metaclass__ = ABCMeta
+    @classmethod
+    def get_config(cls):
+        return {}
+
+    @classmethod
+    def get_instance(cls):
+        profile = cls.get_config()
+        instance = cls(**profile)
+        return instance
+
+    @abstractmethod
+    def get_speech(self, phrase):
+        pass
+
+
+class BaiduTTS(AbstractTTS):
+
+    SLUG = 'baidu-tts'
+
+    
+    def __init__(self, PER, SPD,PIT,VOL,AUE,**args):
+        self.TTS_URL = constants.Baidu_TTS_URL
+        self.CUID = constants.get_mac          
+        self.PER = PER                   
+        self.SPD = SPD                    
+        self.PIT = PIT                 
+        self.VOL = VOL                  
+        self.AUE = AUE                     
+        FORMATS = {3: "mp3", 4: "pcm", 5: "pcm", 6: "wav"}
+        self.FORMAT = FORMATS[self.AUE]
+
+    @classmethod
+    def get_config(cls):
+        return config.get('/Baidu_tts',{})
+
+
+    def get_speach(self,TEXT):
+        token = BDml.fetch_token(self)
+        tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
+        logger.debug(tex)
+        params = {'tok': token, 'tex': tex, 'per': self.PER, 'spd': self.SPD, 'pit': self.PIT, 'vol': self.VOL, 'aue': self.AUE, 'cuid': self.CUID,
+                'lan': 'zh', 'ctp': 1}  # lan ctp 固定参数
+
+        data = urlencode(params)
+        #logger.debug('test on Web Browser' + TTS_URL + '?' + data)
+
+        req = Request(self.TTS_URL, data.encode('utf-8'))
+        has_error = False
+        try:
+            f = urlopen(req)
+            result_str = f.read()
+
+            headers = dict((name.lower(), value) for name, value in f.headers.items())
+
+            has_error = ('content-type' not in headers.keys() or headers['content-type'].find('audio/') < 0)
+        except  HTTPError as err:
+            logger.debug('asr http response http code : ' + str(err.code))
+            result_str = err.read()
+            has_error = True
+
+        save_file = "error.txt" if has_error else 'result.' + self.FORMAT
+        with open(save_file, 'wb') as of:
+            of.write(result_str)
+
+        if has_error:            
+            result_str = str(result_str, 'utf-8')
+            logger.debug("tts api  error:" + result_str)
+        if os.path.exists('result.mp3'):
+            return 'result.mp3'
+        else:
+            logger.error('合成语音出错')
+
+        #logger.debug("result saved as :" + save_file)
 t=''
 wsParam =()
-class XunFeiTTS(AbstactTTS):
-    SULG = 'Xunfei_tts'
-    def __init__(self):
-        self.appid = config.get('/xunfei_API/appid','5e3b849b')
-        self.apikey = config.get('/xunfei_API/apikey','12ee3473d8973cba864565dafda14758')
-        self.apisecret = config.get('/xunfei_API/APISecret','a96a265db24fde37211b5203796f35fe')
+class XunFeiTTS(AbstractTTS):
+
+    SLUG = 'xunfei-tts'
+
+    def __init__(self,appid,apikey,apisecret,**args):
+        self.appid = appid
+        self.apikey = apikey
+        self.apisecret = apisecret
+    
+    @classmethod
+    def get_config(cls):
+        return config.get('/xunfei_API',{})
 
     def get_speach(self,Text):
         
         global wsParam,t
         t=Text
         wsParam = Ws_Param(APPID=self.appid, APIKey=self.apikey,
-                        APISecret=self.apisecret,
+                        apisecret=self.apisecret,
                         Text=Text)
         websocket.enableTrace(False)
         wsUrl = wsParam.create_url()
         ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close)
         ws.on_open = on_open
         ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+    
+        
+        p_t_W(constants.PCM_PATH)
+        return constants.XUNFEITTS_PATH
+    
+
+def get_engine_by_slug(slug=None):
+    """
+    Returns:
+        A TTS Engine implementation available on the current platform
+
+    Raises:
+        ValueError if no speaker implementation is supported on this platform
+    """
+
+    if not slug or type(slug) is not str:
+        raise TypeError("无效的 TTS slug '%s'", slug)
+
+    selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
+                              engine.SLUG == slug, get_engines()))
+
+    if len(selected_engines) == 0:
+        raise ValueError("错误：找不到名为 {} 的 TTS 引擎".format(slug))
+    else:
+        if len(selected_engines) > 1:
+            logger.warning("注意: 有多个 TTS 名称与指定的引擎名 {} 匹配").format(slug)        
+        engine = selected_engines[0]
+        logger.info("使用 {} TTS 引擎".format(engine.SLUG))
+        return engine.get_instance()
+
+
+def get_engines():
+    def get_subclasses(cls):
+        subclasses = set()
+        for subclass in cls.__subclasses__():
+            subclasses.add(subclass)
+            subclasses.update(get_subclasses(subclass))
+        return subclasses
+    return [engine for engine in
+            list(get_subclasses(AbstractTTS))
+            if hasattr(engine, 'SLUG') and engine.SLUG]
