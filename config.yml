@@ -4,7 +4,7 @@ Weather:
 snowboy:
   hotwork: 'snowboy/resources/snowboy.umdl'
   sensitivity: '0.4'
-#hotwork:可选sonwboy.umdl,wukong.pmdl,贾维斯.pmdl
+#hotwork:可选sonwboy.umdl,wukong.pmdl
 
 server:
   port: '1037'
