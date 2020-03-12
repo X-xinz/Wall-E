@@ -1,4 +1,4 @@
-import os
+""" import os
 
 from robot import config, logging, statistic
 from robot.Player import MusicPlayer
@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class Plugin(AbstractPlugin):
+    SLUG = 'LocalPlayer'
     IS_IMMERSIVE = True  # 这是个沉浸式技能
 
 
@@ -67,3 +68,4 @@ class Plugin(AbstractPlugin):
 
     def isValib(self,query):
         return '音乐' in query
+ """

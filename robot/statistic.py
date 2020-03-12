@@ -22,14 +22,11 @@ def utils(f,name,week):
     daynow = (datetime.datetime.now())
     dd=f[name]['date']
     dayold = datetime.datetime.strptime(str(dd),'%Y-%m-%d')
-    print(week)
     days=(daynow-dayold).days
-    logger.debug('相差{}天'.format(days))
     if days != date[week]:
-        adays = f[name][week]+1
+        adays = date[week]
         delta = datetime.timedelta(adays)
         ndays = (daynow - delta).strftime('%Y-%m-%d')
-        logger.debug('今天的日期是{}'.format(ndays))
         if name in f.keys():   
             f[name]["Mon"] =0
             f[name]["Tue"] =0
@@ -48,7 +45,12 @@ def utils(f,name,week):
 def set(AUE):
     """
     统计对应环节的唤醒次数
-    :param AUE: 对应唤醒的序号
+    :param AUE: 对应唤醒的序号 
+                0:"keyword", 
+                1: "TTS", 
+                2: "ASR", 
+                3: "robot",
+                5:"plugs"
     ：returns: 无返回值
     """  
     names = {0: "keyword", 1: "TTS", 2: "ASR", 3: "robot",5:"plugs"}
@@ -58,7 +60,6 @@ def set(AUE):
         if f[name]:
             if utils(f,name,week):                  
                 f[name][week] += 1
-                logger.debug("{} is {}".format(name,f[name]))
                 logger.debug('检测到{} 被使用！'.format(name))
         else:
             logger.debug("唤醒次数统计失败")

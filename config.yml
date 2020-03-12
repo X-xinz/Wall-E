@@ -11,9 +11,7 @@ server:
   password: 'hust'
   debug: "True" 
 #debug:是否开启服务器调试                
-   
-tts: 'X'   
-#B:百度tts  X:讯飞tts                      
+      
 
 LocalPlayer:
   path: "/home/yxz/music"
@@ -26,6 +24,11 @@ xunfei_API:
 tuling_robot:
   api_key: 'e2cd5cabca5a40618b53779b5fe197c5'
 
+baidu_asr:
+  api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
+  secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
+  DEV_PID: 80001
+#1537 表示识别普通话 80001:表示极速版
 Baidu_tts:
   api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
   secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
@@ -42,7 +45,7 @@ Baidu_tts:
 #度博文=106，度小童=110，度小萌=111，度米朵=103，度小娇=5
 
 
-asr_engine: 'xunfei-asr'
-tts_engine: 'xunfei-tts'
-nlu_engine: 'unit'
+asr_engine: 'baidu-asr'
+tts_engine: 'baidu-tts'
+nlu_engine: 'baidu-unit'
 robot: 'tuling'

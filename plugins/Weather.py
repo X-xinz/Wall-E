@@ -8,7 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class Plugin(AbstractPlugin):
-    def handle(self,query):
+    SLUG ='weather'
+    def handle(self,query,parsed):
         statistic.set(5)
         city = config.get('/Weather/location','武汉')
         url = 'https://free-api.heweather.net/s6/weather/forecast?parameters'
@@ -33,5 +34,5 @@ class Plugin(AbstractPlugin):
             logger.error(e)
             self.con.say('天气查询失败了',True)         
 
-    def isValib(self,query):
+    def isValid(self,query,parsed):
         return '天气' in query

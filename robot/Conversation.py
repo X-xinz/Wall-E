@@ -1,12 +1,9 @@
 # -*- coding:utf-8 -*-
-
-
-from robot import Player,ASR,TTS,AI
 import os
 import requests
 import uuid
 from robot.Brain import Brain
-from robot import logging,statistic,config,utils,constants
+from robot import logging,statistic,config,utils,constants,Player,ASR,TTS,AI,NLU
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +12,19 @@ class Conversation(object):
     def __init__(self):
         self.history = []
         self.player = None
-    
+        self.reInit()
+
+    def reInit(self):
+        """ 重新初始化 """
+        try:
+            self.asr = ASR.get_engine_by_slug(config.get('/asr_engine', 'xunfei-asr'))
+            self.tts = TTS.get_engine_by_slug(config.get('/tts_engine', 'baidu-tts' ))
+            self.nlu = NLU.get_engine_by_slug(config.get('/nlu_engine', 'baidu-unit'))
+            self.player = None
+            self.brain = Brain(self)
+        except Exception as e:
+            logger.critical("对话初始化失败：{}".format(e))
+
     def doResponse(self,query):
         self.appendHistory(0, query)        
         brain = Brain(self)
@@ -27,8 +36,7 @@ class Conversation(object):
 
 
     def converse(self,fp):  
-        asr = ASR.XunfeiASR()
-        queryt = asr.transcribe(fp)
+        queryt = self.asr.transcribe(fp)
         statistic.set(2)
         self.doResponse(queryt)
         os.remove(fp)
@@ -40,18 +48,9 @@ class Conversation(object):
         self.appendHistory(1, respons)
         logger.info(respons)
         self.player=Player.SoxPlayer()
-        if config.get('/tts','B') =='B':
-            tts = TTS.BaiduTTS()        
-            tts.get_speach(respons)
-            statistic.set(1)            
-            self.player.play('result.mp3',True)
-        else:
-            tts =TTS.XunFeiTTS()
-            tts.get_speach(respons)
-            statistic.set(1)
-            utils.p_t_W(constants.PCM_PATH)
-            utils.check_and_delete(constants.PCM_PATH)
-            self.player.play('outfile/xunfei.wav',True)
+        result = self.tts.get_speach(respons)
+        statistic.set(1)            
+        self.player.play(result,True)
 
     def getHistory(self):
         return self.history
