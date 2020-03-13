@@ -3,7 +3,10 @@ from robot import config,logging
 logger = logging.getLogger(__name__)
 from .sdk import XunfeiSpeech,Baiduspeech
 from abc import ABCMeta, abstractmethod
+
+
 class AbstractASR(object):
+
     __metaclass__ = ABCMeta
 
     @classmethod
@@ -23,7 +26,6 @@ class AbstractASR(object):
     
 
 class XunfeiASR(AbstractASR):
-
     SLUG='xunfei-asr'
     def __init__(self,appid,apikey,apisecret,**arges):
         self.appid=appid
@@ -47,16 +49,16 @@ class BaiduASR(AbstractASR):
         self.dev_pid=DEV_PID
         self.apikey=api_key
         self.apisecret=secret_key
-
     @classmethod
     def get_config(cls):
         return config.get('/baidu_asr',{})
-
     def transcribe(self,fpath):
         '''
         百度-asr
         '''
         return Baiduspeech.transcribe(fpath,self.apikey,self.apisecret,self.dev_pid)
+
+
 
 def get_engine_by_slug(slug=None):
     if not slug or type(slug) is not str:
