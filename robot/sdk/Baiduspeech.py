@@ -7,16 +7,17 @@ import time
 from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
-
+from urllib.parse import quote_plus, urlencode
+import os
 from .. import config, constants, logging
 
 timer = time.perf_counter
-
+CUID = constants.mac_id
 logger = logging.getLogger(__name__)
 class DemoError(Exception):
     pass
-"""  TOKEN start """
-def fetch_token(API_KEY,SECRET_KEY,SCOPE):
+"""  ASR_TOKEN start """
+def ASR_fetch_token(API_KEY,SECRET_KEY,SCOPE):
     params = {'grant_type': 'client_credentials',
               'client_id': API_KEY,
               'client_secret': SECRET_KEY}
@@ -45,7 +46,7 @@ def fetch_token(API_KEY,SECRET_KEY,SCOPE):
     else:
         raise DemoError('MAYBE API_KEY or SECRET_KEY not correct: access_token or scope not found in token response')
 
-"""  TOKEN end """
+"""  ASR_TOKEN end """
 
 def transcribe(fpath,API_KEY,apiscret,DEV_PID):
     if DEV_PID==80001:
@@ -67,13 +68,13 @@ def transcribe(fpath,API_KEY,apiscret,DEV_PID):
     # 忽略scope检查，非常旧的应用可能没有
     # SCOPE = False
 
-    CUID = constants.mac_id
+    
     # 采样率
     RATE = 16000  # 固定值
 
     AUDIO_FILE = fpath
     FORMAT = AUDIO_FILE[-3:]
-    token = fetch_token(API_KEY,apiscret,SCOPE)
+    token = ASR_fetch_token(API_KEY,apiscret,SCOPE)
 
     speech_data = []
     with open(AUDIO_FILE, 'rb') as speech_file:
@@ -112,3 +113,74 @@ def transcribe(fpath,API_KEY,apiscret,DEV_PID):
     b = json.loads(result_str)
     logger.debug(b)    
     return((b['result'][0]))
+
+
+
+
+
+
+"""  TTS_TOKEN start """
+
+
+def TTS_fetch_token(api_key,secret_key):        
+    logger.debug("fetch token begin")
+    params = {'grant_type': 'client_credentials','client_id': api_key,'client_secret':secret_key}
+    post_data = urlencode(params)        
+    post_data = post_data.encode('utf-8')
+    req = Request(constants.Baidu_tts_TOKEN_URL, post_data)
+    try:
+        f = urlopen(req, timeout=5)
+        result_str = f.read()
+    except HTTPError as err:
+        logger.error('token http response http code : ' + str(err.code))
+        result_str = err.read()       
+    result_str = result_str.decode()
+    #logger.debug(result_str)
+    result = json.loads(result_str)
+    #logger.debug(result)
+    if ('access_token' in result.keys() and 'scope' in result.keys()):
+        if not constants.Baidu_tts_SCOPE in result['scope'].split(' '):
+            raise DemoError('scope is not correct')
+        #logger.debug('SUCCESS WITH TOKEN: %s ; EXPIRES IN SECONDS: %s' % (result['access_token'], result['expires_in']))
+        return result['access_token']
+    else:
+        raise DemoError('MAYBE API_KEY or SECRET_KEY not correct: access_token or scope not found in token response')
+"""  TTS_TOKEN end """
+
+def get_speach(api_key,secret_key,TEXT,PER,SPD,PIT,VOL,AUE,TTS_URL,FORMAT):
+    token = TTS_fetch_token(api_key,secret_key)
+    tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
+    logger.debug(tex)
+    params = {'tok': token, 'tex': tex, 'per': PER, 'spd': SPD, 'pit': PIT, 'vol': VOL, 'aue': AUE, 'cuid': CUID,
+            'lan': 'zh', 'ctp': 1}  # lan ctp 固定参数
+
+    data = urlencode(params)
+    #logger.debug('test on Web Browser' + TTS_URL + '?' + data)
+
+    req = Request(TTS_URL, data.encode('utf-8'))
+    has_error = False
+    try:
+        f = urlopen(req)
+        result_str = f.read()
+
+        headers = dict((name.lower(), value) for name, value in f.headers.items())
+
+        has_error = ('content-type' not in headers.keys() or headers['content-type'].find('audio/') < 0)
+    except  HTTPError as err:
+        logger.debug('asr http response http code : ' + str(err.code))
+        result_str = err.read()
+        has_error = True
+
+    save_file = "error.txt" if has_error else 'result.' + FORMAT
+    with open(save_file, 'wb') as of:
+        of.write(result_str)
+
+    if has_error:            
+        result_str = str(result_str, 'utf-8')
+        logger.debug("tts api  error:" + result_str)
+    if os.path.exists('result.mp3'):
+        return 'result.mp3'
+    else:
+        logger.error('合成语音出错')
+
+    logger.debug("result saved as :" + save_file)
