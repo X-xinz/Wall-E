@@ -12,58 +12,15 @@ from abc import ABCMeta, abstractmethod
 from datetime import datetime
 from time import mktime
 from urllib.error import HTTPError
-from urllib.parse import quote_plus, urlencode
 from urllib.request import Request, urlopen
 from wsgiref.handlers import format_date_time
-from .sdk import XunfeiSpeech
+from .sdk import XunfeiSpeech,Baiduspeech
 import websocket
 import yaml
 
 import _thread as thread
 from robot import Player, config, constants, logging
-
-
-
-
-"""
-baidu-tts
-"""
-
-class DemoError(Exception):
-    pass
-"""  TOKEN start """
 logger = logging.getLogger(__name__)
-class BDml(object):
-    def fetch_token(self):        
-        logger.debug("fetch token begin")
-        params = {'grant_type': 'client_credentials',
-                'client_id': config.get('/Baidu_tts/api_key',constants.Baidu_tts_apikey),
-                'client_secret':config.get('/Baidu_tts/secret_key',constants.Baidu_tts_secret_key)}
-        post_data = urlencode(params)        
-        post_data = post_data.encode('utf-8')
-        req = Request(constants.Baidu_tts_TOKEN_URL, post_data)
-        try:
-            f = urlopen(req, timeout=5)
-            result_str = f.read()
-        except HTTPError as err:
-            logger.error('token http response http code : ' + str(err.code))
-            result_str = err.read()       
-        result_str = result_str.decode()
-        #logger.debug(result_str)
-        result = json.loads(result_str)
-        #logger.debug(result)
-        if ('access_token' in result.keys() and 'scope' in result.keys()):
-            if not constants.Baidu_tts_SCOPE in result['scope'].split(' '):
-                raise DemoError('scope is not correct')
-            #logger.debug('SUCCESS WITH TOKEN: %s ; EXPIRES IN SECONDS: %s' % (result['access_token'], result['expires_in']))
-            return result['access_token']
-        else:
-            raise DemoError('MAYBE API_KEY or SECRET_KEY not correct: access_token or scope not found in token response')
-"""  TOKEN end """
-
-
-
-
 
 class AbstractTTS(object):
     __metaclass__ = ABCMeta
@@ -87,9 +44,10 @@ class BaiduTTS(AbstractTTS):
     SLUG = 'baidu-tts'
 
     
-    def __init__(self, PER, SPD,PIT,VOL,AUE,**args):
+    def __init__(self, api_key,secret_key,PER, SPD,PIT,VOL,AUE,**args):
         self.TTS_URL = constants.Baidu_TTS_URL
-        self.CUID = constants.get_mac          
+        self.api_key = api_key 
+        self.secret_key = secret_key     
         self.PER = PER                   
         self.SPD = SPD                    
         self.PIT = PIT                 
@@ -104,42 +62,9 @@ class BaiduTTS(AbstractTTS):
 
 
     def get_speach(self,TEXT):
-        token = BDml.fetch_token(self)
-        tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
-        logger.debug(tex)
-        params = {'tok': token, 'tex': tex, 'per': self.PER, 'spd': self.SPD, 'pit': self.PIT, 'vol': self.VOL, 'aue': self.AUE, 'cuid': self.CUID,
-                'lan': 'zh', 'ctp': 1}  # lan ctp 固定参数
+        return Baiduspeech.get_speach(self.api_key,self.secret_key,TEXT,self.PER,self.SPD,self.PIT,self.VOL,self.AUE,self.TTS_URL,self.FORMAT)
 
-        data = urlencode(params)
-        #logger.debug('test on Web Browser' + TTS_URL + '?' + data)
-
-        req = Request(self.TTS_URL, data.encode('utf-8'))
-        has_error = False
-        try:
-            f = urlopen(req)
-            result_str = f.read()
-
-            headers = dict((name.lower(), value) for name, value in f.headers.items())
-
-            has_error = ('content-type' not in headers.keys() or headers['content-type'].find('audio/') < 0)
-        except  HTTPError as err:
-            logger.debug('asr http response http code : ' + str(err.code))
-            result_str = err.read()
-            has_error = True
-
-        save_file = "error.txt" if has_error else 'result.' + self.FORMAT
-        with open(save_file, 'wb') as of:
-            of.write(result_str)
-
-        if has_error:            
-            result_str = str(result_str, 'utf-8')
-            logger.debug("tts api  error:" + result_str)
-        if os.path.exists('result.mp3'):
-            return 'result.mp3'
-        else:
-            logger.error('合成语音出错')
-
-        #logger.debug("result saved as :" + save_file)
+        
 
 class XunFeiTTS(AbstractTTS):
 
