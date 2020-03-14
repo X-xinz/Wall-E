@@ -39,7 +39,7 @@ tuling_robot_URL = "http://openapi.tuling123.com/openapi/api/v2"
 
 mac_id =str(get_mac())[:32]              #cuid,身份识别符
 
-LOG = 'DEBUG'                     #log 打印等级（debug/info)
+LOG = 'INFO'                     #log 打印等级（debug/info)
 
 def getConfigPath():
     """

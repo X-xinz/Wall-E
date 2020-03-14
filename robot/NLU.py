@@ -26,6 +26,7 @@ class AbstractNLU(object):
     def parse(self, query, **args):
         """
         进行 NLU 解析
+
         :param query: 用户的指令字符串
         :param **args: 可选的参数
         """
@@ -35,6 +36,7 @@ class AbstractNLU(object):
     def getIntent(self, parsed):
         """ 
         提取意图
+
         :param parsed: 解析结果
         :returns: 意图数组
         """
@@ -44,6 +46,7 @@ class AbstractNLU(object):
     def hasIntent(self, parsed, intent):
         """ 
         判断是否包含某个意图
+
         :param parsed: 解析结果
         :param intent: 意图的名称
         :returns: True: 包含; False: 不包含
@@ -78,6 +81,7 @@ class AbstractNLU(object):
     def getSay(self, parsed, intent):
         """
         提取回复文本
+
         :param parsed: 解析结果
         :param intent: 意图的名称
         :returns: 回复文本
@@ -90,7 +94,7 @@ class UnitNLU(AbstractNLU):
     百度UNIT的NLU API.
     """
 
-    SLUG = "baidu-unit"
+    SLUG = "unit"
 
     def __init__(self):
         super(self.__class__, self).__init__()
@@ -99,6 +103,7 @@ class UnitNLU(AbstractNLU):
     def get_config(cls):
         """
         百度UNIT的配置
+
         无需配置，所以返回 {}
         """
         return {}
@@ -106,6 +111,7 @@ class UnitNLU(AbstractNLU):
     def parse(self, query, **args):
         """
         使用百度 UNIT 进行 NLU 解析
+
         :param query: 用户的指令字符串
         :param **args: UNIT 的相关参数
             - service_id: UNIT 的 service_id
@@ -126,6 +132,7 @@ class UnitNLU(AbstractNLU):
     def getIntent(self, parsed):
         """ 
         提取意图
+
         :param parsed: 解析结果
         :returns: 意图数组
         """
@@ -134,6 +141,7 @@ class UnitNLU(AbstractNLU):
     def hasIntent(self, parsed, intent):
         """ 
         判断是否包含某个意图
+
         :param parsed: UNIT 解析结果
         :param intent: 意图的名称
         :returns: True: 包含; False: 不包含
@@ -165,6 +173,7 @@ class UnitNLU(AbstractNLU):
     def getSay(self, parsed, intent):
         """
         提取 UNIT 的回复文本
+
         :param parsed: UNIT 解析结果
         :param intent: 意图的名称
         :returns: UNIT 的回复文本
@@ -176,6 +185,7 @@ def get_engine_by_slug(slug=None):
     """
     Returns:
         An NLU Engine implementation available on the current platform
+
     Raises:
         ValueError if no speaker implementation is supported on this platform
     """

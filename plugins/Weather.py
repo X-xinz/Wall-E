@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 class Plugin(AbstractPlugin):
     SLUG ='weather'
+    IS_IMMERSIVE = 'False'
     def handle(self,query,parsed):
         statistic.set(5)
         city = config.get('/Weather/location','武汉')

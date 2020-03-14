@@ -14,6 +14,8 @@ from .. import config, constants, logging
 timer = time.perf_counter
 CUID = constants.mac_id
 logger = logging.getLogger(__name__)
+
+
 class DemoError(Exception):
     pass
 """  ASR_TOKEN start """
@@ -29,19 +31,15 @@ def ASR_fetch_token(API_KEY,SECRET_KEY,SCOPE):
         f = urlopen(req)
         result_str = f.read()
     except HTTPError as err:
-        print('token http response http code : ' + str(err.code))
+        logger.error('token http response http code : ' + str(err.code))
         result_str = err.read()
-    
     result_str =  result_str.decode()
 
-    print(result_str)
     result = json.loads(result_str)
-    print(result)
     if ('access_token' in result.keys() and 'scope' in result.keys()):
-        print(SCOPE)
         if SCOPE and (not SCOPE in result['scope'].split(' ')):  # SCOPE = False 忽略检查
             raise DemoError('scope is not correct')
-        print('SUCCESS WITH TOKEN: %s  EXPIRES IN SECONDS: %s' % (result['access_token'], result['expires_in']))
+        logger.debug('SUCCESS WITH TOKEN: %s  EXPIRES IN SECONDS: %s' % (result['access_token'], result['expires_in']))
         return result['access_token']
     else:
         raise DemoError('MAYBE API_KEY or SECRET_KEY not correct: access_token or scope not found in token response')
@@ -73,6 +71,7 @@ def transcribe(fpath,API_KEY,apiscret,DEV_PID):
     RATE = 16000  # 固定值
 
     AUDIO_FILE = fpath
+    print(fpath)
     FORMAT = AUDIO_FILE[-3:]
     token = ASR_fetch_token(API_KEY,apiscret,SCOPE)
 
@@ -97,23 +96,25 @@ def transcribe(fpath,API_KEY,apiscret,DEV_PID):
               'len': length
               }
     post_data = json.dumps(params, sort_keys=False)
-    # print post_data
     req = Request(ASR_URL, post_data.encode('utf-8'))
     req.add_header('Content-Type', 'application/json')
     try:
         begin = timer()
         f = urlopen(req)
         result_str = f.read()
-        print ("Request time cost %f" % (timer() - begin))
+        logger.debug("Request time cost %f" % (timer() - begin))
     except HTTPError as err:
-        print('asr http response http code : ' + str(err.code))
+        logger.debug('asr http response http code : ' + str(err.code))
         result_str = err.read()
    
     result_str = str(result_str, 'utf-8')
     b = json.loads(result_str)
-    logger.debug(b)    
-    return((b['result'][0]))
-
+    logger.debug(b)
+    try:
+        logger.info(b)   
+        return((b['result'][0]))
+    except:
+        logger.error(b['err_msg'])
 
 
 

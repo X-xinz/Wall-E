@@ -1,4 +1,4 @@
-""" import os
+import os
 
 from robot import config, logging, statistic
 from robot.Player import MusicPlayer
@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 class Plugin(AbstractPlugin):
     SLUG = 'LocalPlayer'
+
     IS_IMMERSIVE = True  # 这是个沉浸式技能
 
 
@@ -16,7 +17,7 @@ class Plugin(AbstractPlugin):
         super(Plugin, self).__init__(con)
         self.player = None
         self.song_List=None
-
+        print('2020202020')
     def init_music_player(self):
         self.song_List = self.get_song_list(config.get('/LocalPlayer/path'))
         if self.song_List == None:
@@ -32,6 +33,7 @@ class Plugin(AbstractPlugin):
             self.say('本地音乐目录为空，请添加音乐后重试')
             return
         if self.nlu.hasIntent(parsed, 'MUSICRANK'):
+            
             self.player.play()
         elif self.nlu.hasIntent(parsed, 'CHANGE_TO_NEXT'):
             self.player.next()
@@ -45,7 +47,7 @@ class Plugin(AbstractPlugin):
             self.player.stop()
             self.clearImmersive()  # 去掉沉浸式
         else:
-            self.say('没听懂你的意思呢，要停止播放，请说停止播放', wait=True)
+            self.say('没听懂你的意思呢，要停止播放，请说停止播放')
             self.player.resume()
 
     def get_song_list(self,path):
@@ -53,19 +55,18 @@ class Plugin(AbstractPlugin):
             return []
         #filter():用于过滤序列，过滤掉不符合条件的元素，返回一个迭代器对象，如果要转换为列表，可以使用 list() 来转换。
         flist = list(filter(lambda d: d.endswith('.mp3'), os.listdir(path)))
-        return flist
+        return [os.path.join(path, song) for song in flist]
 
     def restore(self,query):
         if self.player and not self.player.is_pausing():
             self.player.resume()
 
     def pause(self):
-        if self.player:
+        if self.player :
             self.player.stop()
 
     def isValidImmersive(self, text, parsed):
         return any(self.nlu.hasIntent(parsed, intent) for intent in ['CHANGE_TO_LAST', 'CHANGE_TO_NEXT', 'CHANGE_VOL', 'CLOSE_MUSIC', 'PAUSE', 'CONTINUE'])
 
-    def isValib(self,query):
+    def isValid(self,query,parsed):
         return '音乐' in query
- """

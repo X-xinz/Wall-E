@@ -5,12 +5,12 @@ import uuid
 import json
 import os
 from dateutil import parser as dparser
-#from robot import constants, logging
+from robot import constants, logging
 
-#logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 def get_token(api_key, secret_key):
-    cache = open(os.path.join('./outfile', 'baidustt.ini'), 'a+')
+    cache = open(os.path.join(constants.OUTFILES_PATH, 'baidustt.ini'), 'a+')
     try:
         pms = cache.readlines()
         if len(pms) > 0:
@@ -34,7 +34,6 @@ def get_token(api_key, secret_key):
         return token
     except requests.exceptions.HTTPError:
         return ''
-
 
 def getUnit(query, service_id, api_key, secret_key):
     """ 
@@ -67,7 +66,6 @@ def getUnit(query, service_id, api_key, secret_key):
         return None
 
 
-
 def getIntent(parsed):
     """ 
     提取意图
@@ -82,7 +80,6 @@ def getIntent(parsed):
         return ''
 
 
-
 def hasIntent(parsed, intent):
     """ 
     判断是否包含某个意图
@@ -91,7 +88,8 @@ def hasIntent(parsed, intent):
     :param intent: 意图的名称
     :returns: True: 包含; False: 不包含
     """
-    if parsed is not None and 'result' in parsed and 'response_list' in parsed['result']:
+    if parsed is not None and 'result' in parsed and \
+       'response_list' in parsed['result']:
         response_list = parsed['result']['response_list']
         for response in response_list:
             if response['schema']['intent'] == intent:
@@ -99,7 +97,6 @@ def hasIntent(parsed, intent):
         return False
     else:
         return False
-
 
 
 def getSlots(parsed, intent=''):
@@ -122,7 +119,6 @@ def getSlots(parsed, intent=''):
     else:
         return []
 
-
 def getSlotWords(parsed, intent, name):
     """ 
     找出命中某个词槽的内容
@@ -138,7 +134,6 @@ def getSlotWords(parsed, intent, name):
         if slot['name'] == name:
             words.append(slot['normalized_word'])
     return words
-
 
 def getSay(parsed, intent=''):
     """
@@ -159,7 +154,6 @@ def getSay(parsed, intent=''):
         return ''
     else:
         return ''
-
 
 
 if __name__ == '__main__':

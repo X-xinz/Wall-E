@@ -1,0 +1,21 @@
+2020-03-14 17:05:32,805 - robot.Brain - Brain.py - DoQuery - line 66 - DEBUG - No plugin was able to handle phrase 对播放音乐。 
+2020-03-14 17:05:45,933 - robot.Brain - Brain.py - DoQuery - line 42 - INFO - '对播放本地音乐。' 命中技能 localPlayer
+2020-03-14 17:05:45,934 - robot.Brain - Brain.py - DoQuery - line 55 - CRITICAL - Failed to execute plugin
+Traceback (most recent call last):
+  File "/home/yxz/Wall-E/robot/Brain.py", line 51, in DoQuery
+    continueHandle = plugin.handle(query, parsed)
+  File "/home/yxz/Wall-E/plugins/localPlayer.py", line 70, in handle
+    self.say('没听懂你的意思呢，要停止播放，请说停止播放', wait=True)
+  File "/home/yxz/Wall-E/robot/sdk/AbstractPlugin.py", line 32, in say
+    self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted, wait=wait)
+TypeError: say() got an unexpected keyword argument 'cache'
+2020-03-14 17:06:08,289 - robot.Brain - Brain.py - DoQuery - line 42 - INFO - '对播放本地音乐。' 命中技能 localPlayer
+2020-03-14 17:06:08,290 - robot.Brain - Brain.py - DoQuery - line 55 - CRITICAL - Failed to execute plugin
+Traceback (most recent call last):
+  File "/home/yxz/Wall-E/robot/Brain.py", line 51, in DoQuery
+    continueHandle = plugin.handle(query, parsed)
+  File "/home/yxz/Wall-E/plugins/localPlayer.py", line 70, in handle
+    self.say('没听懂你的意思呢，要停止播放，请说停止播放', wait=True)
+  File "/home/yxz/Wall-E/robot/sdk/AbstractPlugin.py", line 32, in say
+    self.con.say(text, cache=cache, plugin=self.SLUG, onCompleted=onCompleted, wait=wait)
+TypeError: say() got an unexpected keyword argument 'cache'

@@ -3,7 +3,7 @@ import os
 import requests
 import uuid
 from robot.Brain import Brain
-from robot import logging,statistic,config,utils,constants,Player,ASR,TTS,AI,NLU
+from robot import logging,statistic,config,utils,constants,Player,ASR,TTS,AI,NLU,utils
 
 logger = logging.getLogger(__name__)
 
@@ -11,9 +11,13 @@ class Conversation(object):
 
     def __init__(self):
         self.history = []
-        self.player = None
+        
         self.reInit()
-
+        self.pluginmod = None
+        self.matchPlugin = None
+        self.immersiveMode = None
+        self.isRecording = False
+        print('con init')
     def reInit(self):
         """ 重新初始化 """
         try:
@@ -27,20 +31,27 @@ class Conversation(object):
 
     def doResponse(self,query):
         self.appendHistory(0, query)        
-        brain = Brain(self)
-        if not brain.DoQuery(query):     
+        
+        if not self.brain.query(query):     
             ai = AI.TulingRobot()
             respons = ai.chat(query)
             statistic.set(3)
             self.say(respons,True)          
 
 
-    def converse(self,fp):  
+    def converse(self,fp): 
+        Player.play('static/beep_lo.wav', False)    
         queryt = self.asr.transcribe(fp)
         statistic.set(2)
+        utils.check_and_delete(fp)
         self.doResponse(queryt)
-        os.remove(fp)
-        
+       
+
+    
+    
+    def doParse(self, query, **args):
+        return self.nlu.parse(query, **args)
+
     def say(self,respons,delete = False):
         '''
         语音反馈（说一句话
@@ -56,11 +67,24 @@ class Conversation(object):
         return self.history
     
     def stop(self):
-        if self.player:
+        if self.player is not None and self.player.is_playing():
             self.player.stop()
+            self.player = None
+        if self.immersiveMode:
+            self.brain.pause()
+
 
 
     def appendHistory(self,type,text):
         if type in (0,1) and text != '':
             self.history.append({'type':type, 'text': text, 'uuid':str(uuid.uuid1())})
 
+    def checkRestore(self):
+        if self.immersiveMode:
+            self.brain.restore()
+
+    def setImmersiveMode(self, slug):
+        self.immersiveMode = slug
+
+    def getImmersiveMode(self):
+        return self.immersiveMode
