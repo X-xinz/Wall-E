@@ -123,7 +123,7 @@ class Plugin(AbstractPlugin):
                 
 
         else:
-            if self.e_text is True:
+            if self.e_text:
                 # 邮件对象不是一个MIMEMultipart,
                 # 就根据content_type判断:
                 content_type = msg.get_content_type()

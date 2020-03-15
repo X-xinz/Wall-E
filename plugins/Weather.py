@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 
 class Plugin(AbstractPlugin):
     SLUG ='weather'
-    IS_IMMERSIVE = 'False'
+    IS_IMMERSIVE = 'True'
     def handle(self,query,parsed):
-        statistic.set(5)
+        if self.nlu.hasIntent(parsed, 'MUSICRANK'):
+            self.con.say()
         city = config.get('/Weather/location','武汉')
         url = 'https://free-api.heweather.net/s6/weather/forecast?parameters'
         params = {
@@ -23,6 +24,7 @@ class Plugin(AbstractPlugin):
         try:
             results = r.json()['HeWeather6'][0]['daily_forecast']
             logger.debug(results)
+            print(results)
             res = '{}:'.format(city)
             day_lable = ['今天','明天','后天']
             i = 0

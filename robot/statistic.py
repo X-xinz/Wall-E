@@ -27,16 +27,17 @@ def utils(f,name,week):
         adays = date[week]
         delta = datetime.timedelta(adays)
         ndays = (daynow - delta).strftime('%Y-%m-%d')
-        if name in f.keys():   
-            f[name]["Mon"] =0
-            f[name]["Tue"] =0
-            f[name]["Wed"] =0
-            f[name]["Thu"] =0
-            f[name]["Fri"] =0
-            f[name]["Sat"] =0
-            f[name]["Sun"] =0
-            f[name]["date"] =ndays
-            logger.debug("本周统计初始化成功")
+        for na in ['keyword','TTS','ASR','robot','plugs']:
+            if na in f.keys():   
+                f[na]["Mon"] =0
+                f[na]["Tue"] =0
+                f[na]["Wed"] =0
+                f[na]["Thu"] =0
+                f[na]["Fri"] =0
+                f[na]["Sat"] =0
+                f[na]["Sun"] =0
+                f[na]["date"] =ndays
+                logger.info("本周统计初始化成功")
             
         else:
             logger.error('error')

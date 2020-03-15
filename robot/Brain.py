@@ -1,7 +1,7 @@
 # -*- coding: utf-8-*-
 import re
 from robot import config
-from robot import logging
+from robot import logging,statistic
 from . import plugin_loader
 
 logger = logging.getLogger(__name__)
@@ -50,11 +50,19 @@ class Brain(object):
         text -- 用户输入
         """
 
+       
+        args = {
+            "service_id": "S27715",
+            "api_key": 'OR7mdez7owRVFxoQO0ynYGna',
+            "secret_key": 'NYRw13Sm1zcm2QtsmPiGnET4rqcU2GQI'
+        }
+        """ 
         args = {
             "service_id": "S13442",
             "api_key": 'w5v7gUV3iPGsGntcM84PtOOM',
             "secret_key": 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
-        }
+        } 
+         """ 
         parsed = self.conversation.doParse(text, **args)
 
         for plugin in self.plugins:
@@ -62,6 +70,7 @@ class Brain(object):
                 continue
 
             logger.info("'{}' 命中技能 {}".format(text, plugin.SLUG))
+            statistic.set(5)
             self.conversation.matchPlugin = plugin.SLUG
             if plugin.IS_IMMERSIVE:
                 self.conversation.setImmersiveMode(plugin.SLUG)
