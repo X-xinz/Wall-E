@@ -1,6 +1,7 @@
 # -*- coding: utf-8-*-
 import subprocess
 import os
+import random
 import platform
 from . import utils
 import _thread as thread
@@ -34,7 +35,7 @@ def play(fname, onCompleted=None, wait=False):
 
 def getPlayerByFileName(fname):
     _foo, ext = os.path.splitext(fname)
-    if ext in ['.mp3', '.wav']:
+    if ext in ['.mp3', '.wav','.flac']:
         return SoxPlayer()
 
 class AbstractPlayer(object):
@@ -75,7 +76,11 @@ class SoxPlayer(AbstractPlayer):
         if self.delete:
             utils.check_and_delete(self.src)
         logger.debug('play completed')
- 
+        if self.proc.returncode == 0:
+            for onCompleted in self.onCompleteds:
+                if onCompleted is not None:
+                    onCompleted()
+    
     
     def play(self, src, delete=False, onCompleted=None, wait=False):
         if os.path.exists(src) or src.startswith('http'):
@@ -112,23 +117,26 @@ class MusicPlayer(SoxPlayer):
     """
     SLUG = 'MusicPlayer'
 
-    def __init__(self, playlist, plugin, **kwargs):
+    def __init__(self, playlist, showlist,plugin, **kwargs):
         super(MusicPlayer, self).__init__(**kwargs)
         self.playlist = playlist
+        self.showlist = showlist
         self.plugin = plugin
-        self.idx = 0
+        self.idx = random.randint(0,len(self.playlist))
         self.pausing = False
         self.last_paused = None
 
-    def update_playlist(self, playlist):
+    def update_playlist(self, playlist ,showlist):
         super().stop()
-        self.playlist = playlist
-        self.idx = 0
+        self.playlist = playlist 
+        self.showlist = showlist       
+        self.idx = random.randint(0,len(self.playlist))
         self.play()
 
     def play(self):
         logger.debug('MusicPlayer play')
         path = self.playlist[self.idx]
+        logger.info('即将为您播放{}'.format(self.showlist[self.idx]))
         super().stop()
         super().play(path, False, self.next)
 
@@ -169,3 +177,53 @@ class MusicPlayer(SoxPlayer):
     def is_pausing(self):
         return self.pausing
 
+    def turnUp(self):
+        system = platform.system()
+        if system == 'Darwin':
+            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, universal_newlines=True)
+            volume = int(res.stdout.strip())
+            volume += 20
+            if volume >= 100:
+                volume = 100
+                self.plugin.say('音量已经最大啦', wait=True)
+            subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
+        elif system == 'Linux':
+            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
+            print(res.stdout)
+            if res.stdout != '' and res.stdout.strip().endswith('%'):
+                volume = int(res.stdout.strip().replace('%', ''))
+                volume += 20
+                if volume >= 100:
+                    volume = 100
+                    self.plugin.say('音量已经最大啦', wait=True)
+                subprocess.run(['amixer', 'set', 'Master', '{}%'.format(volume)])
+            else:
+                subprocess.run(['amixer', 'set', 'Master', '20%+'])
+        else:
+            self.plugin.say('当前系统不支持调节音量', wait=True)
+        self.resume()
+
+    def turnDown(self):
+        system = platform.system()
+        if system == 'Darwin':
+            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, universal_newlines=True)
+            volume = int(res.stdout.strip())
+            volume -= 20
+            if volume <= 20:
+                volume = 20
+                self.plugin.say('音量已经很小啦', wait=True)
+            subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
+        elif system == 'Linux':
+            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
+            if res.stdout != '' and res.stdout.endswith('%'):
+                volume = int(res.stdout.replace('%', '').strip())
+                volume -= 20
+                if volume <= 20:
+                    volume = 20
+                    self.plugin.say('音量已经最小啦', wait=True)
+                subprocess.run(['amixer', 'set', 'Master', '{}%'.format(volume)])
+            else:
+                subprocess.run(['amixer', 'set', 'Master', '20%-'])
+        else:
+            self.plugin.say('当前系统不支持调节音量', wait=True)
+        self.resume()

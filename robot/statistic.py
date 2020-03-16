@@ -79,6 +79,5 @@ def get_numb():
             robot = (list(f['robot'].values()))[0:7]
             plugs = (list(f['plugs'].values()))[0:7]
             RESULT=(k,tts,a,robot,plugs)
-            print (f['keyword'])
             return RESULT
 

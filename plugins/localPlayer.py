@@ -17,13 +17,14 @@ class Plugin(AbstractPlugin):
         super(Plugin, self).__init__(con)
         self.player = None
         self.song_List=None
-        print('2020202020')
+        self.showlist = []
+
     def init_music_player(self):
         self.song_List = self.get_song_list(config.get('/LocalPlayer/path'))
         if self.song_List == None:
             logger.error('{}插件配置有误'.format(self.song_List))
-        logger.info('本地音乐列表:{}'.format(self.song_List))
-        return MusicPlayer(self.song_List,self)
+        logger.info('本地音乐列表:{}'.format(self.showlist))
+        return MusicPlayer(self.song_List,self.showlist,self)
     
     def handle(self,text,parsed):
         if not self.player:
@@ -43,6 +44,24 @@ class Plugin(AbstractPlugin):
             self.player.pause()
         elif self.nlu.hasIntent(parsed, 'CONTINUE'):
             self.player.resume()
+
+        elif self.nlu.hasIntent(parsed, 'CHANGE_VOL'):
+            slots = self.nlu.getSlots(parsed, 'CHANGE_VOL')
+            for slot in slots:
+                if slot['name'] == 'user_d':
+                    word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_d')[0]
+                    if word == '--HIGHER--':
+                        self.player.turnUp()
+                    else:
+                        self.player.turnDown()
+                    return
+                elif slot['name'] == 'user_vd':
+                    word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_vd')[0]
+                    if word == '--LOUDER--':
+                        self.player.turnUp()
+                    else:
+                        self.player.turnDown()
+                        
         elif self.nlu.hasIntent(parsed, 'CLOSE_MUSIC'):
             self.player.stop()
             self.clearImmersive()  # 去掉沉浸式
@@ -54,9 +73,11 @@ class Plugin(AbstractPlugin):
         if not os.path.exists(path) or not os.path.isdir(path):
             return []
         #filter():用于过滤序列，过滤掉不符合条件的元素，返回一个迭代器对象，如果要转换为列表，可以使用 list() 来转换。
-        flist = list(filter(lambda d: d.endswith('.mp3'), os.listdir(path)))
+        flist = list(filter(lambda d: (d.endswith(".mp3") or d.endswith(".flac")), os.listdir(path)))
+        self.showlist = flist        
         return [os.path.join(path, song) for song in flist]
 
+  
     def restore(self,query):
         if self.player and not self.player.is_pausing():
             self.player.resume()

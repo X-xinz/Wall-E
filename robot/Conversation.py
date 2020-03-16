@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import os
+import time
 import requests
 import uuid
 from robot.Brain import Brain
@@ -17,7 +18,6 @@ class Conversation(object):
         self.matchPlugin = None
         self.immersiveMode = None
         self.isRecording = False
-        print('con init')
     def reInit(self):
         """ 重新初始化 """
         try:
@@ -30,17 +30,29 @@ class Conversation(object):
             logger.critical("对话初始化失败：{}".format(e))
 
     def doResponse(self,query):
+        self.stop()
         self.appendHistory(0, query)        
-        
-        if not self.brain.query(query):     
+        lastImmersiveMode = self.immersiveMode
+        if not self.brain.query(query):
+            # 没命中技能，使用机器人回复   
             ai = AI.TulingRobot()
             respons = ai.chat(query)
             statistic.set(3)
-            self.say(respons,True)          
+            self.say(respons,True)
+        else:
+            if lastImmersiveMode is not None and lastImmersiveMode != self.matchPlugin:
+                time.sleep(1)
+                if self.player is not None and self.player.is_playing():
+                    logger.debug('等说完再checkRestore')
+                    self.player.appendOnCompleted(lambda: self.checkRestore())
+                else:
+                    logger.debug('checkRestore')
+                    self.checkRestore()
+      
 
 
     def converse(self,fp): 
-        Player.play('static/beep_lo.wav', False)    
+        Player.play('static/beep_lo.wav', wait = False)    
         queryt = self.asr.transcribe(fp)
         statistic.set(2)
         utils.check_and_delete(fp)
