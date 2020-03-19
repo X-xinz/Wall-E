@@ -50,7 +50,7 @@ class Brain(object):
         text -- 用户输入
         """
 
-       
+        """
         args = {
             "service_id": "S27715",
             "api_key": 'OR7mdez7owRVFxoQO0ynYGna',
@@ -62,7 +62,7 @@ class Brain(object):
             "api_key": 'w5v7gUV3iPGsGntcM84PtOOM',
             "secret_key": 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
         } 
-         """ 
+         
         parsed = self.conversation.doParse(text, **args)
 
         for plugin in self.plugins:

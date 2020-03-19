@@ -162,7 +162,7 @@ class Plugin(AbstractPlugin):
         return charset     
 
     def isValid(self,query,parsed):
-        return '邮件'or'邮箱' in query
+        return 'xing' in query
 
 
 

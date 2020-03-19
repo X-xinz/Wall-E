@@ -14,14 +14,14 @@ interrupted = False
 conversation = None
 
 def audioRecorderCallback(fname):
-    Player.play('static/beep_lo.wav', False)    
+        
     conversation.converse(fname)
     
 
 def detectedCallback():
     if conversation:
         conversation.stop()
-    Player.play( 'static/beep_hi.wav', False)
+    Player.play( 'static/beep_hi.wav', wait=False)
     statistic.set(0)
 
 

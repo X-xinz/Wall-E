@@ -78,7 +78,7 @@ class Plugin(AbstractPlugin):
         return [os.path.join(path, song) for song in flist]
 
   
-    def restore(self,query):
+    def restore(self):
         if self.player and not self.player.is_pausing():
             self.player.resume()
 

@@ -127,7 +127,7 @@ class ResHandler(BassHandler):
         if not self.current_user:
             self.redirect("/login")
             return
-        self.render('response.html',plugs=statistic.get_numb())
+        self.render('statistic.html',plugs=statistic.get_numb())
 
 settings = {
        
@@ -147,7 +147,7 @@ def make_app():
         (r"/chat",ChatHandler),
         (r"/getlog", GetLogHandler),
         (r"/operate",OperateHandler),
-        (r"/response",ResHandler),
+        (r"/statistic",ResHandler),
     ],  **settings )
 
       

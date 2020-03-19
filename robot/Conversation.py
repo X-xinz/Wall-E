@@ -38,7 +38,7 @@ class Conversation(object):
             ai = AI.TulingRobot()
             respons = ai.chat(query)
             statistic.set(3)
-            self.say(respons,True)
+            self.say(respons,True, onCompleted=self.checkRestore)
         else:
             if lastImmersiveMode is not None and lastImmersiveMode != self.matchPlugin:
                 time.sleep(1)
@@ -48,32 +48,28 @@ class Conversation(object):
                 else:
                     logger.debug('checkRestore')
                     self.checkRestore()
-      
-
-
+  
     def converse(self,fp): 
         Player.play('static/beep_lo.wav', wait = False)    
         queryt = self.asr.transcribe(fp)
         statistic.set(2)
         utils.check_and_delete(fp)
         self.doResponse(queryt)
-       
-
-    
-    
+      
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
 
-    def say(self,respons,delete = False):
+    def say(self,respons,delete = False, onCompleted=None,wait=False):
         '''
         语音反馈（说一句话
         '''
+
         self.appendHistory(1, respons)
         logger.info(respons)
         self.player=Player.SoxPlayer()
         result = self.tts.get_speach(respons)
         statistic.set(1)            
-        self.player.play(result,True)
+        self.player.play(result,onCompleted=onCompleted,wait = True)
 
     def getHistory(self):
         return self.history
@@ -84,8 +80,6 @@ class Conversation(object):
             self.player = None
         if self.immersiveMode:
             self.brain.pause()
-
-
 
     def appendHistory(self,type,text):
         if type in (0,1) and text != '':
