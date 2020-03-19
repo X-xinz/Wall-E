@@ -22,23 +22,29 @@ lazy-object-proxy  1.4.3
 mccabe             0.6.1     
 more-itertools     8.2.0     
 packaging          20.1      
-pip                20.0.2    
+  
 pluggy             0.13.1    
 py                 1.8.1     
-PyAudio            0.2.11    
+ 
 pylint             2.4.4     
 pyparsing          2.4.6     
 pytest             5.3.5     
-PyYAML             5.3       
+     
 requests           2.23.0    
 setuptools         40.6.2    
 six                1.14.0    
-tornado            5.1.1     
+    
 typed-ast          1.4.1     
 urllib3            1.25.8    
-wcwidth            0.1.8     
-websocket          0.2.1     
-websocket-client   0.57.0    
+wcwidth            0.1.8 
+
+PyAudio            0.2.11    
+PyYAML             5.3  
+tornado            5.1.1 
+websocket          0.2.1    
+websocket-client   0.57.0 
+
+
 wrapt              1.11.2    
  
 
