@@ -87,7 +87,6 @@ class SoxPlayer(AbstractPlayer):
             self.src = src
             self.delete = delete
             if onCompleted is not None:
-                print(onCompleted)
                 self.onCompleteds.append(onCompleted)
             if not wait:
                 thread.start_new_thread(self.doPlay, ())
@@ -136,8 +135,8 @@ class MusicPlayer(SoxPlayer):
 
     def play(self):
         logger.debug('MusicPlayer play')
-        path = self.playlist[self.idx]
-        logger.info('即将为您播放{}'.format(self.showlist[self.idx]))
+        path = self.playlist[(self.idx)-1]
+        logger.info('即将为您播放{}'.format(self.showlist[self.idx - 1]))
         super().stop()
         super().play(path, delete = False, onCompleted= self.next)
 

@@ -123,7 +123,7 @@ class Plugin(AbstractPlugin):
                 
 
         else:
-            if self.e_text:
+            if self.e_text == True:
                 # 邮件对象不是一个MIMEMultipart,
                 # 就根据content_type判断:
                 content_type = msg.get_content_type()
@@ -162,7 +162,7 @@ class Plugin(AbstractPlugin):
         return charset     
 
     def isValid(self,query,parsed):
-        return 'xing' in query
+        return '邮件' in query
 
 
 
