@@ -27,6 +27,7 @@ CUSTOM_PATH = os.path.expanduser(
 CONFIG_PATH = 'config.yml'
 LOGGING_PATH = 'outfile/wukong.log'
 DB_PATH ='outfile/response.db'
+NEWDB_PATH ='outfile/response'
 PCM_PATH='outfile/demo.pcm'
 XUNFEITTS_PATH='outfile/xunfei.wav'
 

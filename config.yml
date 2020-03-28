@@ -14,7 +14,7 @@ server:
       
 #本地音乐存放路径
 LocalPlayer:
-  path: "/media/sf_sharedir/CloudMusic"
+  path: "MAC/Users/yxz⁩/flac"
 
 xunfei_API:
   appid: '5e3b849b'
@@ -64,4 +64,4 @@ email:
   #一次需要读取的邮件数
   read_numb: '10'
   #是否显示具体邮件内容,true：显示
-  e_text: 'False' 
+  e_text: 'False'
