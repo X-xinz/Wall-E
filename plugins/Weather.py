@@ -24,7 +24,6 @@ class Plugin(AbstractPlugin):
         try:
             results = r.json()['HeWeather6'][0]['daily_forecast']
             logger.debug(results)
-            print(results)
             res = '{}:'.format(city)
             day_lable = ['今天','明天','后天']
             i = 0

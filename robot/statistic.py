@@ -38,7 +38,7 @@ def utils(f,name,week):
                 f[na]["Sat"] =0
                 f[na]["Sun"] =0
                 f[na]["date"] =ndays
-                logger.info("本周统计初始化成功")
+                logger.info("本周{}统计初始化成功".format(na))
             
         else:
             logger.error('error')
@@ -88,6 +88,5 @@ def get_numb():
             robot = (list(f['robot'].values()))[0:7]
             plugs = (list(f['plugs'].values()))[0:7]
             RESULT=(k,tts,a,robot,plugs)
-            print(RESULT)
             return RESULT
 

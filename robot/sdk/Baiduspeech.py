@@ -9,7 +9,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.parse import quote_plus, urlencode
 import os
-from .. import config, constants, logging
+from .. import config, constants, logging, Conversation
 
 timer = time.perf_counter
 CUID = constants.mac_id
@@ -110,11 +110,16 @@ def transcribe(fpath,API_KEY,apiscret,DEV_PID):
     result_str = str(result_str, 'utf-8')
     b = json.loads(result_str)
     logger.debug(b)
-    try:
-        logger.info(b)   
-        return((b['result'][0]))
-    except:
-        logger.error(b['err_msg'])
+    if (b['err_no']) == 0:
+    
+        logger.info(b) 
+        
+        return ''.join(b['result'])
+
+    else:
+        logger.error(b['err_no'])
+        return ''
+        
 
 
 
