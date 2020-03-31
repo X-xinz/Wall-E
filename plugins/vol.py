@@ -5,6 +5,7 @@ from robot.sdk.AbstractPlugin import AbstractPlugin
 
 logger = logging.getLogger(__name__)
 
+
 class Plugin(AbstractPlugin):
 
     def __init__(self, con):
@@ -13,12 +14,13 @@ class Plugin(AbstractPlugin):
 
     def handle(self, text, parsed):
         if not self.player:
-            self.player = MusicPlayer([], [],self)
+            self.player = MusicPlayer([], [], self)
         if self.nlu.hasIntent(parsed, 'CHANGE_VOL'):
             slots = self.nlu.getSlots(parsed, 'CHANGE_VOL')
             for slot in slots:
                 if slot['name'] == 'user_d':
-                    word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_d')[0]
+                    word = self.nlu.getSlotWords(
+                        parsed, 'CHANGE_VOL', 'user_d')[0]
                     if word == '--HIGHER--':
                         self.player.turnUp()
                         self.say('好的')
@@ -27,7 +29,8 @@ class Plugin(AbstractPlugin):
                         self.say('好的')
                     return
                 elif slot['name'] == 'user_vd':
-                    word = self.nlu.getSlotWords(parsed, 'CHANGE_VOL', 'user_vd')[0]
+                    word = self.nlu.getSlotWords(
+                        parsed, 'CHANGE_VOL', 'user_vd')[0]
                     if word == '--LOUDER--':
                         self.player.turnUp()
                         self.say('好的')

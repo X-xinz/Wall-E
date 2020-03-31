@@ -1,10 +1,11 @@
 # -*- coding: utf-8-*-
 import re
 from robot import config
-from robot import logging,statistic
+from robot import logging, statistic
 from . import plugin_loader
 
 logger = logging.getLogger(__name__)
+
 
 class Brain(object):
 
@@ -25,12 +26,11 @@ class Brain(object):
                 return True
         return False
 
-    def isValid(self, plugin, text, parsed):        
+    def isValid(self, plugin, text, parsed):
         return plugin.isValid(text, parsed)
 
     def isValidImmersive(self, plugin, text, parsed):
         return plugin.isValidImmersive(text, parsed)
-    
 
     def isImmersive(self, plugin, text, parsed):
         return self.conversation.getImmersiveMode() == plugin.SLUG and \
@@ -40,7 +40,7 @@ class Brain(object):
         plugin_list = []
         for plugin in self.plugins:
             plugin_list.append(plugin.SLUG)
-        logger.info('已激活插件：{}'.format(plugin_list))    
+        logger.info('已激活插件：{}'.format(plugin_list))
 
     def query(self, text):
         """
@@ -56,13 +56,13 @@ class Brain(object):
             "api_key": 'OR7mdez7owRVFxoQO0ynYGna',
             "secret_key": 'NYRw13Sm1zcm2QtsmPiGnET4rqcU2GQI'
         }
-        """ 
+        """
         args = {
             "service_id": "S13442",
             "api_key": 'w5v7gUV3iPGsGntcM84PtOOM',
             "secret_key": 'KffXwW6E1alcGplcabcNs63Li6GvvnfL'
-        } 
-         
+        }
+
         parsed = self.conversation.doParse(text, **args)
 
         for plugin in self.plugins:
@@ -79,16 +79,16 @@ class Brain(object):
             try:
                 self.handling = True
                 continueHandle = plugin.handle(text, parsed)
-                self.handling = False                
+                self.handling = False
             except Exception:
                 logger.critical('Failed to execute plugin',
-                                   exc_info=True)
+                                exc_info=True)
                 reply = u"抱歉，插件{}出故障了，晚点再试试吧".format(plugin.SLUG)
                 self.conversation.say(reply, plugin=plugin.SLUG)
             else:
                 logger.debug("Handling of phrase '%s' by " +
-                                   "plugin '%s' completed", text,
-                                   plugin.SLUG)                    
+                             "plugin '%s' completed", text,
+                             plugin.SLUG)
             finally:
                 if not continueHandle:
                     return True
@@ -110,8 +110,4 @@ class Brain(object):
             return
         for plugin in self.plugins:
             if plugin.SLUG == self.conversation.immersiveMode and plugin.pause:
-              plugin.pause()
-
-
-    
-            
+                plugin.pause()

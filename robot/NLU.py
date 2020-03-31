@@ -5,6 +5,7 @@ from abc import ABCMeta, abstractmethod
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractNLU(object):
     """
     Generic parent class for all NLU engines
@@ -57,7 +58,7 @@ class AbstractNLU(object):
     def getSlots(self, parsed, intent):
         """ 
         提取某个意图的所有词槽
-    
+
         :param parsed: 解析结果
         :param intent: 意图的名称
         :returns: 词槽列表。你可以通过 name 属性筛选词槽，
@@ -69,7 +70,7 @@ class AbstractNLU(object):
     def getSlotWords(self, parsed, intent, name):
         """ 
         找出命中某个词槽的内容
-    
+
         :param parsed: 解析结果
         :param intent: 意图的名称
         :param name: 词槽名
@@ -151,7 +152,7 @@ class UnitNLU(AbstractNLU):
     def getSlots(self, parsed, intent):
         """ 
         提取某个意图的所有词槽
-    
+
         :param parsed: UNIT 解析结果
         :param intent: 意图的名称
         :returns: 词槽列表。你可以通过 name 属性筛选词槽，
@@ -162,7 +163,7 @@ class UnitNLU(AbstractNLU):
     def getSlotWords(self, parsed, intent, name):
         """ 
         找出命中某个词槽的内容
-    
+
         :param parsed: UNIT 解析结果
         :param intent: 意图的名称
         :param name: 词槽名
@@ -194,13 +195,13 @@ def get_engine_by_slug(slug=None):
         raise TypeError("无效的 NLU slug '%s'", slug)
 
     selected_engines = list(filter(lambda engine: hasattr(engine, "SLUG") and
-                              engine.SLUG == slug, get_engines()))
+                                   engine.SLUG == slug, get_engines()))
 
     if len(selected_engines) == 0:
         raise ValueError("错误：找不到名为 {} 的 NLU 引擎".format(slug))
     else:
         if len(selected_engines) > 1:
-            logger.warning("注意: 有多个 NLU 名称与指定的引擎名 {} 匹配").format(slug)        
+            logger.warning("注意: 有多个 NLU 名称与指定的引擎名 {} 匹配").format(slug)
         engine = selected_engines[0]
         logger.info("使用 {} NLU 引擎".format(engine.SLUG))
         return engine.get_instance()

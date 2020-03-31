@@ -67,7 +67,7 @@ class Conversation(object):
         self.appendHistory(1, respons)
         logger.info(respons)
         self.player=Player.SoxPlayer()
-        result = self.tts.get_speach(respons)
+        result = self.tts.get_speech(respons)
         statistic.set(1)            
         self.player.play(result,delete = True, onCompleted=onCompleted, wait = True)
 

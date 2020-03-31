@@ -11,12 +11,16 @@ from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)
 
+
 def py_error_handler(filename, line, function, err, fmt):
     pass
 
-ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
+
+ERROR_HANDLER_FUNC = CFUNCTYPE(
+    None, c_char_p, c_int, c_char_p, c_int, c_char_p)
 
 c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+
 
 @contextmanager
 def no_alsa_error():
@@ -29,14 +33,17 @@ def no_alsa_error():
         yield
         pass
 
+
 def play(fname, onCompleted=None, wait=False):
     player = getPlayerByFileName(fname)
     player.play(fname, onCompleted=onCompleted, wait=wait)
 
+
 def getPlayerByFileName(fname):
     _foo, ext = os.path.splitext(fname)
-    if ext in ['.mp3', '.wav','.flac']:
+    if ext in ['.mp3', '.wav', '.flac']:
         return SoxPlayer()
+
 
 class AbstractPlayer(object):
 
@@ -54,7 +61,7 @@ class AbstractPlayer(object):
 
     def is_playing(self):
         return False
-    
+
 
 class SoxPlayer(AbstractPlayer):
     SLUG = 'SoxPlayer'
@@ -69,7 +76,8 @@ class SoxPlayer(AbstractPlayer):
     def doPlay(self):
         cmd = ['play', str(self.src)]
         logger.debug('Executing %s', ' '.join(cmd))
-        self.proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        self.proc = subprocess.Popen(
+            cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         self.playing = True
         self.proc.wait()
         self.playing = False
@@ -80,8 +88,7 @@ class SoxPlayer(AbstractPlayer):
             for onCompleted in self.onCompleteds:
                 if onCompleted is not None:
                     onCompleted()
-    
-    
+
     def play(self, src, delete=False, onCompleted=None, wait=False):
         if os.path.exists(src) or src.startswith('http'):
             self.src = src
@@ -109,6 +116,7 @@ class SoxPlayer(AbstractPlayer):
     def is_playing(self):
         return self.playing
 
+
 class MusicPlayer(SoxPlayer):
     """
     给音乐播放器插件使用的，
@@ -117,20 +125,20 @@ class MusicPlayer(SoxPlayer):
     """
     SLUG = 'MusicPlayer'
 
-    def __init__(self, playlist, showlist,plugin, **kwargs):
+    def __init__(self, playlist, showlist, plugin, **kwargs):
         super(MusicPlayer, self).__init__(**kwargs)
         self.playlist = playlist
         self.showlist = showlist
         self.plugin = plugin
-        self.idx = random.randint(0,len(self.playlist))
+        self.idx = random.randint(0, len(self.playlist))
         self.pausing = False
         self.last_paused = None
 
-    def update_playlist(self, playlist ,showlist):
+    def update_playlist(self, playlist, showlist):
         super().stop()
-        self.playlist = playlist 
-        self.showlist = showlist       
-        self.idx = random.randint(0,len(self.playlist))
+        self.playlist = playlist
+        self.showlist = showlist
+        self.idx = random.randint(0, len(self.playlist))
         self.play()
 
     def play(self):
@@ -138,7 +146,7 @@ class MusicPlayer(SoxPlayer):
         path = self.playlist[(self.idx)-1]
         logger.info('即将为您播放{}'.format(self.showlist[self.idx - 1]))
         super().stop()
-        super().play(path, delete = False, onCompleted= self.next)
+        super().play(path, delete=False, onCompleted=self.next)
 
     def next(self):
         logger.debug('MusicPlayer next')
@@ -160,7 +168,8 @@ class MusicPlayer(SoxPlayer):
         if self.proc:
             logger.debug('MusicPlayer stop')
             # STOP current play process
-            self.last_paused = utils.write_temp_file(str(self.proc.pid), 'pid', 'w')
+            self.last_paused = utils.write_temp_file(
+                str(self.proc.pid), 'pid', 'w')
             self.onCompleteds = []
             subprocess.run(['pkill', '-STOP', '-F', self.last_paused])
 
@@ -180,15 +189,18 @@ class MusicPlayer(SoxPlayer):
     def turnUp(self):
         system = platform.system()
         if system == 'Darwin':
-            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, universal_newlines=True)
+            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'],
+                                 shell=False, capture_output=True, universal_newlines=True)
             volume = int(res.stdout.strip())
             volume += 20
             if volume >= 100:
                 volume = 100
                 self.plugin.say('音量已经最大啦', wait=True)
-            subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
+            subprocess.run(
+                ['osascript', '-e', 'set volume output volume {}'.format(volume)])
         elif system == 'Linux':
-            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
+            res = subprocess.run(
+                ["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
             print(res.stdout)
             if res.stdout != '' and res.stdout.strip().endswith('%'):
                 volume = int(res.stdout.strip().replace('%', ''))
@@ -196,7 +208,8 @@ class MusicPlayer(SoxPlayer):
                 if volume >= 100:
                     volume = 100
                     self.plugin.say('音量已经最大啦', wait=True)
-                subprocess.run(['amixer', 'set', 'Master', '{}%'.format(volume)])
+                subprocess.run(
+                    ['amixer', 'set', 'Master', '{}%'.format(volume)])
             else:
                 subprocess.run(['amixer', 'set', 'Master', '20%+'])
         else:
@@ -206,22 +219,26 @@ class MusicPlayer(SoxPlayer):
     def turnDown(self):
         system = platform.system()
         if system == 'Darwin':
-            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], shell=False, capture_output=True, universal_newlines=True)
+            res = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'],
+                                 shell=False, capture_output=True, universal_newlines=True)
             volume = int(res.stdout.strip())
             volume -= 20
             if volume <= 20:
                 volume = 20
                 self.plugin.say('音量已经很小啦', wait=True)
-            subprocess.run(['osascript', '-e', 'set volume output volume {}'.format(volume)])
+            subprocess.run(
+                ['osascript', '-e', 'set volume output volume {}'.format(volume)])
         elif system == 'Linux':
-            res = subprocess.run(["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
+            res = subprocess.run(
+                ["amixer sget Master | grep 'Mono:' | awk -F'[][]' '{ print $2 }'"], shell=True, capture_output=True, universal_newlines=True)
             if res.stdout != '' and res.stdout.endswith('%'):
                 volume = int(res.stdout.replace('%', '').strip())
                 volume -= 20
                 if volume <= 20:
                     volume = 20
                     self.plugin.say('音量已经最小啦', wait=True)
-                subprocess.run(['amixer', 'set', 'Master', '{}%'.format(volume)])
+                subprocess.run(
+                    ['amixer', 'set', 'Master', '{}%'.format(volume)])
             else:
                 subprocess.run(['amixer', 'set', 'Master', '20%-'])
         else:

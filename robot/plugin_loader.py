@@ -11,6 +11,7 @@ _has_init = False
 # plugins run at query
 _plugins_query = []
 
+
 def init_plugins(con):
     """
     动态加载技能插件
@@ -36,7 +37,7 @@ def init_plugins(con):
             mod = loader.load_module(name)
         except Exception:
             logger.warning("插件 {} 加载出错，跳过".format(name),
-                            exc_info=True)
+                           exc_info=True)
             continue
 
         if not hasattr(mod, 'Plugin'):
@@ -52,7 +53,7 @@ def init_plugins(con):
         # check conflict
         if plugin.SLUG in nameSet:
             logger.warning("插件 {} SLUG({}) 重复，跳过".format(name,
-                                                                 plugin.SLUG))
+                                                         plugin.SLUG))
             continue
         nameSet.add(plugin.SLUG)
 
@@ -80,4 +81,3 @@ def get_plugins(con):
     _plugins_query = []
     init_plugins(con)
     return _plugins_query
-
