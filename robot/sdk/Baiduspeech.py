@@ -153,7 +153,7 @@ def TTS_fetch_token(api_key,secret_key):
         raise DemoError('MAYBE API_KEY or SECRET_KEY not correct: access_token or scope not found in token response')
 """  TTS_TOKEN end """
 
-def get_speach(api_key,secret_key,TEXT,PER,SPD,PIT,VOL,AUE,TTS_URL,FORMAT):
+def get_speech(api_key,secret_key,TEXT,PER,SPD,PIT,VOL,AUE,TTS_URL,FORMAT):
     token = TTS_fetch_token(api_key,secret_key)
     tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
     logger.debug(tex)

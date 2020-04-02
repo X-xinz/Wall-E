@@ -227,3 +227,4 @@ class MusicPlayer(SoxPlayer):
         else:
             self.plugin.say('当前系统不支持调节音量', wait=True)
         self.resume()
+        

@@ -89,3 +89,4 @@ def dump(confihgStr):
     """
     with open(constants.getConfigPath(),'w') as f:
         f.write(confihgStr)
+        

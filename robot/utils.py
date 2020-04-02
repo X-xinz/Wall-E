@@ -1,15 +1,37 @@
 import os
 import tempfile
 import wave
-from robot import constants,utils
+import time
+import hashlib
+import shutil
+from robot import constants,utils,config
+import _thread as thread
+import subprocess
 
-def check_and_delete(fpath):
+def check_and_delete(fpath,wait=0):
     '''
     检查文件是否存在并删除
     '''
+    def run():
+        if wait > 0:
+            time.sleep(wait)
+        if isinstance(fpath, str) and os.path.exists(fpath):
+            if os.path.isfile(fpath):
+                os.remove(fpath)
+            else:
+                shutil.rmtree(fpath)
+    
+    thread.start_new_thread(run, ())
 
-    if os.path.exists(fpath):
-        os.remove(fpath)
+
+def lruCache():
+    """ 清理最近未使用的缓存 """
+    def run(*args):
+        if config.get('/lru_cache/enable', True):            
+            days = config.get('/lru_cache/days', 7)
+            subprocess.run('find . -name "*.mp3" -atime +%d -exec rm {} \;' % days, cwd=constants.OUTFILES_PATH, shell=True)
+
+    thread.start_new_thread(run, ())
 
 def write_temp_file(data,suffix,mode='w+b'):
     """ 
@@ -34,6 +56,26 @@ def get_pcm_from_wav(wav_path):
     """
     wav = wave.open(wav_path, 'rb')
     return wav.readframes(wav.getnframes())
+
+
+def getCache(msg):
+    """ 获取缓存的语音 """
+    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
+    mp3_cache = os.path.join(constants.OUTFILES_PATH, md5 + '.mp3')
+    wav_cache = os.path.join(constants.OUTFILES_PATH, md5 + '.wav')
+    if os.path.exists(mp3_cache):
+        return mp3_cache
+    elif os.path.exists(wav_cache):
+        return wav_cache
+    return None
+
+def saveCache(voice, msg):
+    """ 获取缓存的语音 """
+    _foo, ext = os.path.splitext(voice)
+    md5 = hashlib.md5(msg.encode('utf-8')).hexdigest()
+    target = os.path.join(constants.OUTFILES_PATH, md5+ext)
+    shutil.copyfile(voice, target)
+    return target
 
 
 

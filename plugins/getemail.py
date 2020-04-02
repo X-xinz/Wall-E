@@ -81,7 +81,7 @@ class Plugin(AbstractPlugin):
             # # 将str类型转换成<class 'email.message.Message'>
             # msg = email.message_from_string(email_content)
             msg = Parser().parsestr(email_content)
-            print('------------------------------  华丽分隔符  ------------------------------')
+            print('～～～～～～～～～～～～～～～～～～～  华丽分隔符  ～～～～～～～～～～～～～～～')
         
             # 写入邮件内容到文件
             self.parse_email(msg, 0)

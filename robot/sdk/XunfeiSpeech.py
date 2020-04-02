@@ -271,7 +271,7 @@ def transcribe(fpath,appid,apikey,apisecret,**arges):
     logger.debug(time2-time1)
     return gresult
 
-def get_speach(Text,appid,apikey,apisecret):
+def get_speech(Text,appid,apikey,apisecret):
     '''xunfei-tts'''
     global wsParam
    

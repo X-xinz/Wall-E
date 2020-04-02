@@ -5,6 +5,8 @@ snowboy:
   hotwork: 'snowboy/resources/snowboy.umdl'
   sensitivity: '0.4'
 #hotwork:可选sonwboy.umdl,wukong.pmdl，小白.pmdl
+silent_threshold: 15 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
+recording_timeout: 5 # 录制的语音最大长度（秒）
 
 server:
   port: '1037'
@@ -15,6 +17,12 @@ server:
 #本地音乐存放路径
 LocalPlayer:
   path: "MAC/Users/yxz⁩/flac"
+
+# 是否定期清理temp目录下的缓存音频
+lru_cache:
+    enable: true # true: 开启; false: 关闭
+    days: 7 # 清理超过多少天没有使用的文件
+
 
 xunfei_API:
   appid: '5e3b849b'
@@ -65,3 +73,12 @@ email:
   read_numb: '10'
   #是否显示具体邮件内容,true：显示
   e_text: 'False'
+
+
+########################
+#### 来自第三方的插件 #####
+########################
+
+#百度FM
+baidufm:
+    channel: 14

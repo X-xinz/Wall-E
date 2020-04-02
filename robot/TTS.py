@@ -61,8 +61,8 @@ class BaiduTTS(AbstractTTS):
         return config.get('/Baidu_tts',{})
 
 
-    def get_speach(self,TEXT):
-        return Baiduspeech.get_speach(self.api_key,self.secret_key,TEXT,self.PER,self.SPD,self.PIT,self.VOL,self.AUE,self.TTS_URL,self.FORMAT)
+    def get_speech(self,TEXT):
+        return Baiduspeech.get_speech(self.api_key,self.secret_key,TEXT,self.PER,self.SPD,self.PIT,self.VOL,self.AUE,self.TTS_URL,self.FORMAT)
 
         
 
@@ -79,9 +79,9 @@ class XunFeiTTS(AbstractTTS):
     def get_config(cls):
         return config.get('/xunfei_API',{})
 
-    def get_speach(self,Text):
+    def get_speech(self,Text):
 
-        return XunfeiSpeech.get_speach(Text,self.appid,self.apikey,self.apisecret)
+        return XunfeiSpeech.get_speech(Text,self.appid,self.apikey,self.apisecret)
     
 
 def get_engine_by_slug(slug=None):

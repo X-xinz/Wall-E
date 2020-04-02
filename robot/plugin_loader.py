@@ -80,4 +80,5 @@ def get_plugins(con):
     _plugins_query = []
     init_plugins(con)
     return _plugins_query
+    
 

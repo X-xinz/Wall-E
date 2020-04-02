@@ -59,7 +59,6 @@ class BaiduASR(AbstractASR):
         return Baiduspeech.transcribe(fpath,self.apikey,self.apisecret,self.dev_pid)
 
 
-
 def get_engine_by_slug(slug=None):
     if not slug or type(slug) is not str:
         raise TypeError("无效的 ASR slug '%s'", slug)

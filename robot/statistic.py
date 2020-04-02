@@ -59,9 +59,7 @@ def set(AUE):
     name =names[AUE]
     week = time.strftime("%a",time.localtime())
     if not os.path.exists(constants.DB_PATH):
-        print('1')
         Base()
-        print('12')
     with shelve.open(constants.NEWDB_PATH,flag='w',writeback=True)as f:    	
         if f[name]:
             if utils(f,name,week):                  
@@ -77,9 +75,7 @@ def get_numb():
     :returns: 返回本周所有唤醒次数，返回值为多维数组。
     """
     if not os.path.exists(constants.DB_PATH):
-        print('1')
         Base()
-        print('12')
     else:
         with shelve.open(constants.NEWDB_PATH) as f:
             k = (list(f["keyword"].values()))[0:7]

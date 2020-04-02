@@ -90,4 +90,4 @@ class Plugin(AbstractPlugin):
         return any(self.nlu.hasIntent(parsed, intent) for intent in ['CHANGE_TO_LAST', 'CHANGE_TO_NEXT', 'CHANGE_VOL', 'CLOSE_MUSIC', 'PAUSE', 'CONTINUE'])
 
     def isValid(self,query,parsed):
-        return '音乐' in query
+        return '本地音乐' in query

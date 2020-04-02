@@ -59,17 +59,32 @@ class Conversation(object):
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
 
-    def say(self,respons,delete = False, onCompleted=None,wait=False):
+    def say(self,msg,cache = False, onCompleted=None,wait=False):
         '''
         语音反馈（说一句话
         '''
 
-        self.appendHistory(1, respons)
-        logger.info(respons)
+        self.appendHistory(1, msg)
+        logger.info(msg)
+        voice = ''
+        cache_path = ''
+        if utils.getCache(msg):
+            logger.info("命中缓存，播放缓存语音")
+            voice = utils.getCache(msg)
+            cache_path = utils.getCache(msg)
+        else:
+            try:
+                voice = self.tts.get_speech(msg)
+                cache_path = utils.saveCache(voice, msg)
+            except Exception as e:
+                logger.error('保存缓存失败：{}'.format(e))
         self.player=Player.SoxPlayer()
-        result = self.tts.get_speach(respons)
+        
         statistic.set(1)            
-        self.player.play(result,delete = True, onCompleted=onCompleted, wait = True)
+        self.player.play(voice,not cache, onCompleted, wait)
+        if not cache:
+            utils.check_and_delete(cache_path, 60) # 60秒后将自动清理不缓存的音频
+        utils.lruCache()  # 清理缓存
 
     def getHistory(self):
         return self.history
@@ -94,3 +109,11 @@ class Conversation(object):
 
     def getImmersiveMode(self):
         return self.immersiveMode
+
+
+    def play(self, src, delete=False, onCompleted=None, volume=1):
+        """ 播放一个音频 """
+        if self.player:
+            self.stop()
+        self.player = Player.SoxPlayer()
+        self.player.play(src, delete=delete, onCompleted=onCompleted)
