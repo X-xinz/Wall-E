@@ -283,6 +283,6 @@ def get_speech(Text,appid,apikey,apisecret):
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
     
-    resurt = p_t_W(constants.PCM_PATH,'xunfei-wav',True)
-    logger.debug("xunfei-wav saved as :{}".format(resurt))
-    return resurt
+    result = p_t_W(constants.PCM_PATH,'xunfei-wav',True)
+    logger.debug("xunfei-wav saved as :{}".format(result))
+    return result

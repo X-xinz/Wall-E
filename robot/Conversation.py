@@ -79,7 +79,11 @@ class Conversation(object):
             except Exception as e:
                 logger.error('保存缓存失败：{}'.format(e))
         self.player=Player.SoxPlayer()
+<<<<<<< HEAD
         
+=======
+        result = self.tts.get_speech(respons)
+>>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9
         statistic.set(1)            
         self.player.play(voice,not cache, onCompleted, wait)
         if not cache:

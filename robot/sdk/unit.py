@@ -9,6 +9,7 @@ from robot import constants, logging
 
 logger = logging.getLogger(__name__)
 
+
 def get_token(api_key, secret_key):
     cache = open(os.path.join(constants.OUTFILES_PATH, 'baidustt.ini'), 'a+')
     try:
@@ -35,6 +36,7 @@ def get_token(api_key, secret_key):
     except requests.exceptions.HTTPError:
         return ''
 
+
 def getUnit(query, service_id, api_key, secret_key):
     """ 
     NLU 解析
@@ -47,16 +49,16 @@ def getUnit(query, service_id, api_key, secret_key):
     """
     access_token = get_token(api_key, secret_key)
     url = 'https://aip.baidubce.com/rpc/2.0/unit/service/chat?access_token=' + access_token
-    request={
-        "query":query,
-        "user_id":"888888",
+    request = {
+        "query": query,
+        "user_id": "888888",
     }
-    body={
+    body = {
         "log_id": str(uuid.uuid1()),
-        "version":"2.0",
+        "version": "2.0",
         "service_id": service_id,
         "session_id": str(uuid.uuid1()),
-        "request":request
+        "request": request
     }
     try:
         headers = {'Content-Type': 'application/json'}
@@ -102,7 +104,7 @@ def hasIntent(parsed, intent):
 def getSlots(parsed, intent=''):
     """ 
     提取某个意图的所有词槽
-    
+
     :param parsed: UNIT 解析结果
     :param intent: 意图的名称
     :returns: 词槽列表。你可以通过 name 属性筛选词槽，
@@ -119,10 +121,11 @@ def getSlots(parsed, intent=''):
     else:
         return []
 
+
 def getSlotWords(parsed, intent, name):
     """ 
     找出命中某个词槽的内容
-    
+
     :param parsed: UNIT 解析结果
     :param intent: 意图的名称
     :param name: 词槽名
@@ -134,6 +137,7 @@ def getSlotWords(parsed, intent, name):
         if slot['name'] == name:
             words.append(slot['normalized_word'])
     return words
+
 
 def getSay(parsed, intent=''):
     """
@@ -157,5 +161,6 @@ def getSay(parsed, intent=''):
 
 
 if __name__ == '__main__':
-    parsed = getUnit('今天的天气', "S13442", 'w5v7gUV3iPGsGntcM84PtOOM', 'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
+    parsed = getUnit('今天的天气', "S13442", 'w5v7gUV3iPGsGntcM84PtOOM',
+                     'KffXwW6E1alcGplcabcNs63Li6GvvnfL')
     print(parsed)
