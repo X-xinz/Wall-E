@@ -1,17 +1,12 @@
 import os
 import tempfile
 import wave
-<<<<<<< HEAD
 import time
 import hashlib
 import shutil
 from robot import constants,utils,config
 import _thread as thread
 import subprocess
-=======
-from robot import constants, utils
-
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9
 
 def check_and_delete(fpath,wait=0):
     '''
@@ -64,7 +59,6 @@ def get_pcm_from_wav(wav_path):
     wav = wave.open(wav_path, 'rb')
     return wav.readframes(wav.getnframes())
 
-<<<<<<< HEAD
 
 def getCache(msg):
     """ 获取缓存的语音 """
@@ -89,9 +83,6 @@ def saveCache(voice, msg):
 
 
 def p_t_W(pcm_path,wavname,delect=False):
-=======
-def p_t_W(pcm_path, wavname, delete=False):
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9
     """
     pcm to wav
     :param pcm_path:pcm路径

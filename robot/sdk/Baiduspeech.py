@@ -56,6 +56,7 @@ def ASR_fetch_token(API_KEY, SECRET_KEY, SCOPE):
 
 
 def transcribe(fpath, API_KEY, apiscret, DEV_PID):
+    
     if DEV_PID == 80001:
         # 极速版
         DEV_PID = 80001
@@ -78,7 +79,6 @@ def transcribe(fpath, API_KEY, apiscret, DEV_PID):
     RATE = 16000  # 固定值
 
     AUDIO_FILE = fpath
-    print(fpath)
     FORMAT = AUDIO_FILE[-3:]
     token = ASR_fetch_token(API_KEY, apiscret, SCOPE)
 
@@ -119,12 +119,13 @@ def transcribe(fpath, API_KEY, apiscret, DEV_PID):
     logger.debug(b)
     if (b['err_no']) == 0:
 
-        logger.info(b)
+        logger.info('baidu语音识别到了：{}'.format(b['result']))
 
         return ''.join(b['result'])
 
     else:
         logger.error(b['err_no'])
+        logger.info('baidu语音识别出错了: {}'.format(b['err_msg']))
         return ''
 
 
@@ -160,14 +161,8 @@ def TTS_fetch_token(api_key, secret_key):
 
 """  TTS_TOKEN end """
 
-<<<<<<< HEAD
 def get_speech(api_key,secret_key,TEXT,PER,SPD,PIT,VOL,AUE,TTS_URL,FORMAT):
     token = TTS_fetch_token(api_key,secret_key)
-=======
-
-def get_speech(api_key, secret_key, TEXT, PER, SPD, PIT, VOL, AUE, TTS_URL, FORMAT):
-    token = TTS_fetch_token(api_key, secret_key)
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9
     tex = quote_plus(TEXT)  # 此处TEXT需要两次urlencode
     logger.debug(tex)
     params = {'tok': token, 'tex': tex, 'per': PER, 'spd': SPD, 'pit': PIT, 'vol': VOL, 'aue': AUE, 'cuid': CUID,

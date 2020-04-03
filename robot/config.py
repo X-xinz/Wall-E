@@ -93,11 +93,6 @@ def dump(confihgStr):
     将配置字符串写回配置文件
     :param configStr: 配置字符串
     """
-<<<<<<< HEAD
     with open(constants.getConfigPath(),'w') as f:
         f.write(confihgStr)
         
-=======
-    with open(constants.getConfigPath(), 'w') as f:
-        f.write(confihgStr)
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9

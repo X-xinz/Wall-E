@@ -9,16 +9,11 @@ logger = logging.getLogger(__name__)
 def Base():
     s = shelve.open(constants.NEWDB_PATH)
     try:
-        s['keyword'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,
-                        'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
-        s['TTS'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,
-                    'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
-        s['ASR'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,
-                    'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
-        s['robot'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,
-                      'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
-        s['plugs'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,
-                      'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
+        s['keyword'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
+        s['TTS'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
+        s['ASR'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
+        s['robot'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
+        s['plugs'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
     finally:
         s.close()
 
@@ -67,12 +62,7 @@ def set(AUE):
     week = time.strftime("%a", time.localtime())
     if not os.path.exists(constants.DB_PATH):
         Base()
-<<<<<<< HEAD
     with shelve.open(constants.NEWDB_PATH,flag='w',writeback=True)as f:    	
-=======
-        print('12')
-    with shelve.open(constants.NEWDB_PATH, flag='w', writeback=True)as f:
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9
         if f[name]:
             if utils(f, name, week):
                 f[name][week] += 1

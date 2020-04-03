@@ -59,7 +59,4 @@ class TulingRobot(AbstactRobot):
         except Exception as e:
             logger.error(e)
             return ''
-<<<<<<< HEAD
             
-=======
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9

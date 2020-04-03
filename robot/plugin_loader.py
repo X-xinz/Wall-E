@@ -81,8 +81,5 @@ def get_plugins(con):
     _plugins_query = []
     init_plugins(con)
     return _plugins_query
-<<<<<<< HEAD
     
 
-=======
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9
