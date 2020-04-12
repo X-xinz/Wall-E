@@ -1,15 +1,19 @@
-#存入固定常量
 import os
 from robot import config
 from uuid import getnode as get_mac
 APP_PATH = os.path.normpath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     os.pardir))
+    
+OUTFILES_PATH = os.path.join(APP_PATH, "outfile")
 
 LIB_PATH = os.path.join(APP_PATH, "robot")
+
 DATA_PATH = os.path.join(APP_PATH, "static")
-TEMP_PATH = os.path.join(APP_PATH, "temp")
-OUTFILES_PATH = os.path.join(APP_PATH, "outfile")
+
+TEMP_PATH = os.path.join(APP_PATH, "outfile")
+
+
 TEMPLATE_PATH = os.path.join(APP_PATH, "server", "templates")
 PLUGIN_PATH = os.path.join(APP_PATH, "plugins")
 DEFAULT_CONFIG_NAME = 'default.yml'
@@ -34,6 +38,10 @@ Baidu_tts_TOKEN_URL = 'http://openapi.baidu.com/oauth/2.0/token'
 tuling_robot_URL = "http://openapi.tuling123.com/openapi/api/v2"
 mac_id =str(get_mac())[:32]              #cuid,身份识别符
 LOG = 'DEBUG'                     #log 打印等级（debug/info)
+
+
+
+
 def getConfigPath():
     """
     返回配置文件的完整路径

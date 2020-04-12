@@ -90,10 +90,5 @@ class Plugin(AbstractPlugin):
     def isValidImmersive(self, text, parsed):
         return any(self.nlu.hasIntent(parsed, intent) for intent in ['CHANGE_TO_LAST', 'CHANGE_TO_NEXT', 'CHANGE_VOL', 'CLOSE_MUSIC', 'PAUSE', 'CONTINUE'])
 
-<<<<<<< HEAD
     def isValid(self,query,parsed):
         return '本地音乐' in query
-=======
-    def isValid(self, query, parsed):
-        return '音乐' in query
->>>>>>> 6095ebb181ac71d27cfa62e9c3aafc05af796ef9

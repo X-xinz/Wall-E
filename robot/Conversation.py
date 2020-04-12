@@ -28,10 +28,18 @@ class Conversation(object):
             self.brain = Brain(self)
         except Exception as e:
             logger.critical("对话初始化失败：{}".format(e))
+    
+    def converse(self,fp): 
+        Player.play('static/beep_lo.wav', wait = False)    
+        queryt = self.asr.transcribe(fp)
+        statistic.set(2)
+        utils.check_and_delete(fp)
+        self.doResponse(queryt)
 
     def doResponse(self,query):
         self.stop()
-        self.appendHistory(0, query)        
+        self.appendHistory(0, query)
+        logger.info(query)   
         lastImmersiveMode = self.immersiveMode
         if not self.brain.query(query):
             # 没命中技能，使用机器人回复   
@@ -49,12 +57,7 @@ class Conversation(object):
                     logger.debug('checkRestore')
                     self.checkRestore()
   
-    def converse(self,fp): 
-        Player.play('static/beep_lo.wav', wait = False)    
-        queryt = self.asr.transcribe(fp)
-        statistic.set(2)
-        utils.check_and_delete(fp)
-        self.doResponse(queryt)
+
       
     def doParse(self, query, **args):
         return self.nlu.parse(query, **args)
@@ -97,6 +100,12 @@ class Conversation(object):
             self.brain.pause()
 
     def appendHistory(self,type,text):
+        """
+        添加会话历史
+
+        :param type: 类型，0代表用户输入，1为技能或机器人回复
+        :param text: 对话内容
+        """
         if type in (0,1) and text != '':
             self.history.append({'type':type, 'text': text, 'uuid':str(uuid.uuid1())})
 

@@ -9,6 +9,7 @@ import os
 import logging
 from ctypes import CFUNCTYPE, c_char_p, c_int, cdll
 from contextlib import contextmanager
+from robot import constant
 
 logging.basicConfig()
 logger = logging.getLogger("snowboy")
@@ -256,7 +257,7 @@ class HotwordDetector(object):
         """
         Save the message stored in self.recordedData to a timestamped file.
         """
-        filename = 'output' + str(int(time.time())) + '.wav'
+        filename = os.path.join(constant.OUTFILES_PATH,'output' + str(int(time.time())) + '.wav')
         data = b''.join(self.recordedData)
 
         #use wave to save data
