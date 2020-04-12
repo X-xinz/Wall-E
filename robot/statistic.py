@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def Base():
-    s = shelve.open(constants.NEWDB_PATH)
+    s = shelve.open(constants.DB_PATH)
     try:
         s['keyword'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0,'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
         s['TTS'] = {'Mon': 0, 'Tue': 0, 'Wed': 0, 'Thu': 0, 'Fri': 0, 'Sat': 0, 'Sun': 0, 'date': '1999-02-14'}
