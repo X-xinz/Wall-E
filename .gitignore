@@ -46,6 +46,7 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+*.pyc
 
 # Translations
 *.mo
@@ -122,3 +123,5 @@ outfile/31579fec4672f6c3bc6800956cf18ccd.mp3
 outfile/98989b42beb60097c43580342b2f9c8b.mp3
 outfile/a59b0ec7d80f01f0bc744a8b218cbbdb.mp3
 outfile/
+robot/__pycache__/
+robot/__pycache__/AI.cpython-37.pyc

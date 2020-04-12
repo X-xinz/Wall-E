@@ -5,13 +5,13 @@ import os
 import subprocess
 from logging import FileHandler
 from logging.handlers import RotatingFileHandler
-from robot import constant
+from robot import constants
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
 WARNING = logging.WARNING
 ERROR = logging.ERROR
-ll = constant.OUTFILES_PATH
+ll = constants.OUTFILES_PATH
 logpath = os.path.join(ll,'wukong.log')
 def getLogger(name):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s')
@@ -31,8 +31,8 @@ def readLog(lines = 200):
     :param lines:最大行数
     :returns:最新指定行数的log
     """
-    res = subprocess.run(['tail','-n', str(lines), constant.LOGGING_PATH], 
-                        cwd=constant.APP_PATH,
+    res = subprocess.run(['tail','-n', str(lines), constants.LOGGING_PATH], 
+                        cwd=constants.APP_PATH,
                         capture_output=True,
                         encoding="utf-8"
                         )

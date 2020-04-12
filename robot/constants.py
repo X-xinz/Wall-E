@@ -1,6 +1,6 @@
 import os
-from robot import config
 from uuid import getnode as get_mac
+
 APP_PATH = os.path.normpath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     os.pardir))
