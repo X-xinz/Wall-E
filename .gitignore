@@ -109,8 +109,7 @@ venv.bak/
 .vscode
 robot
 text.py
-outfile/response.db
-outfile/response.db
+
 result.mp3
 .gitignore
 robot/__pycache__/

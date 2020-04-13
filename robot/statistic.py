@@ -62,11 +62,12 @@ def set(AUE):
     week = time.strftime("%a", time.localtime())
     if not os.path.exists(constants.DB_PATH):
         Base()
-    with shelve.open(constants.NEWDB_PATH,flag='w',writeback=True)as f:    	
+    with shelve.open(constants.DB_PATH,flag='w',writeback=True)as f:    	
         if f[name]:
             if utils(f, name, week):
                 f[name][week] += 1
                 logger.debug('检测到{} 被使用！'.format(name))
+                print(f[name])
         else:
             logger.debug("唤醒次数统计失败")
 
@@ -80,7 +81,7 @@ def get_numb():
     if not os.path.exists(constants.DB_PATH):
         Base()
     else:
-        with shelve.open(constants.NEWDB_PATH) as f:
+        with shelve.open(constants.DB_PATH) as f:
             k = (list(f["keyword"].values()))[0:7]
             tts = (list(f['TTS'].values()))[0:7]
             a = (list(f['ASR'].values()))[0:7]
