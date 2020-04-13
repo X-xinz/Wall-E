@@ -67,7 +67,6 @@ def set(AUE):
             if utils(f, name, week):
                 f[name][week] += 1
                 logger.debug('检测到{} 被使用！'.format(name))
-                print(f[name])
         else:
             logger.debug("唤醒次数统计失败")
 
