@@ -131,10 +131,10 @@ class ResHandler(BassHandler):
 
 settings = {
        
-    "cookie_secret": "\xe5\x94\x87\x14\x11\xd8\xcc\xd0\x12oC\xc4\x1cF\x9d\xa9\x96\xb0\xaf\x19x\xea",
+    "cookie_secret": config.get('/server/cookie_secret',''),
     "template_path": "server/templates",
     "static_path": "server/static",
-    "debug": "True",
+    "debug": config.get('/server/debug', 'False'),
 }
 
 def make_app():

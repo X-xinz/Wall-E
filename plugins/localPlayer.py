@@ -65,6 +65,7 @@ class Plugin(AbstractPlugin):
 
         elif self.nlu.hasIntent(parsed, 'CLOSE_MUSIC'):
             self.player.stop()
+            print(',')
             self.clearImmersive()  # 去掉沉浸式
         else:
             self.say('没听懂你的意思呢，要停止播放，请说停止播放')

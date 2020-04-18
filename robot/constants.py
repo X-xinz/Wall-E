@@ -5,15 +5,15 @@ APP_PATH = os.path.normpath(os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     os.pardir))
     
-OUTFILES_PATH = os.path.join(APP_PATH, "outfile")
+
 
 LIB_PATH = os.path.join(APP_PATH, "robot")
 
 DATA_PATH = os.path.join(APP_PATH, "static")
 
-TEMP_PATH = os.path.join(APP_PATH, "outfile")
+TEMP_PATH = os.path.join(APP_PATH, "temp")
 
-
+OUTFILES_PATH = os.path.join(APP_PATH, "outfile")
 TEMPLATE_PATH = os.path.join(APP_PATH, "server", "templates")
 PLUGIN_PATH = os.path.join(APP_PATH, "plugins")
 DEFAULT_CONFIG_NAME = 'default.yml'

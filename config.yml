@@ -1,5 +1,18 @@
-Weather:
-  location: '巧家'
+robot_name_cn: '瓦力'
+robot_name: 'Wall-E'
+first_name: '师父'
+last_name: '尹'
+timezone: HKT
+location: '巧家'
+
+server:
+  enable: 'True'
+  host: '127.0.0.1'
+  port: '1037'
+  password: 'hust'
+  debug: "True" 
+  cookie_secret: '\xe5\x94\x87\x14\x11\xd8\xcc\xd0\x12oC\xc4\x1cF\x9d\xa9\x96\xb0\xaf\x19x\xea'
+#debug:是否开启服务器调试  
 
 snowboy:
   hotwork: 'snowboy/resources/snowboy.umdl'
@@ -7,16 +20,11 @@ snowboy:
 #hotwork:可选sonwboy.umdl,wukong.pmdl，小白.pmdl
 silent_threshold: 15 # 判断为静音的阈值。环境比较吵杂的地方可以适当调大
 recording_timeout: 5 # 录制的语音最大长度（秒）
-
-server:
-  port: '1037'
-  password: 'hust'
-  debug: "True" 
-#debug:是否开启服务器调试                
+             
       
 #本地音乐存放路径
 LocalPlayer:
-  path: "MAC/Users/yxz⁩/flac"
+  path: "/Users/yinxingze/Music/flac"
 
 # 是否定期清理temp目录下的缓存音频
 lru_cache:
@@ -29,8 +37,11 @@ xunfei_API:
   apikey: '12ee3473d8973cba864565dafda14758'
   apisecret: 'a96a265db24fde37211b5203796f35fe'
 
-tuling_robot:
+tuling:
   api_key: 'e2cd5cabca5a40618b53779b5fe197c5'
+emotibot:
+  active_mode: 'False'
+  appid: '32ee80dddb36f1dc5356517503b3f55e'
 
 baidu_asr:
   api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
@@ -56,6 +67,7 @@ Baidu_tts:
 asr_engine: 'baidu-asr'
 tts_engine: 'baidu-tts'
 nlu_engine: 'unit'
+ai_engine: 'emotibot'
 
 
 email:

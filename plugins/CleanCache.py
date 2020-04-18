@@ -9,7 +9,7 @@ class Plugin(AbstractPlugin):
     SLUG = 'cleancache'
 
     def handle(self, text, parsed):
-        temp = constants.OUTFILES_PATH
+        temp = constants.TEMP_PATH
         for f in os.listdir(temp):
             if f != 'DIR':
                 utils.check_and_delete(os.path.join(temp, f))

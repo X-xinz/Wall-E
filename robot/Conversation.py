@@ -4,7 +4,7 @@ import time
 import requests
 import uuid
 from robot.Brain import Brain
-from robot import logging,statistic,config,utils,constants,Player,ASR,TTS,AI,NLU,utils
+from robot import logging,statistic,config,utils,constants,Player,ASR,TTS,AI,NLU,utils,AI
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,7 @@ class Conversation(object):
             self.asr = ASR.get_engine_by_slug(config.get('/asr_engine', 'xunfei-asr'))
             self.tts = TTS.get_engine_by_slug(config.get('/tts_engine', 'baidu-tts' ))
             self.nlu = NLU.get_engine_by_slug(config.get('/nlu_engine', 'baidu-unit'))
+            self.ai = AI.get_robot_by_slug(config.get('/ai_engine', 'tuling'))
             self.player = None
             self.brain = Brain(self)
         except Exception as e:
@@ -43,8 +44,8 @@ class Conversation(object):
         lastImmersiveMode = self.immersiveMode
         if not self.brain.query(query):
             # 没命中技能，使用机器人回复   
-            ai = AI.TulingRobot()
-            respons = ai.chat(query)
+            
+            respons = self.ai.chat(query)
             statistic.set(3)
             self.say(respons,True, onCompleted=self.checkRestore)
         else:

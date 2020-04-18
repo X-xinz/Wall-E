@@ -10,12 +10,10 @@ logger = logging.getLogger(__name__)
 
 class Plugin(AbstractPlugin):
     SLUG = 'weather'
-    IS_IMMERSIVE = 'True'
+    IS_IMMERSIVE = 'False'
 
     def handle(self, query, parsed):
-        if self.nlu.hasIntent(parsed, 'MUSICRANK'):
-            self.con.say()
-        city = config.get('/Weather/location', '武汉')
+        city = config.get('location', '武汉')
         url = 'https://free-api.heweather.net/s6/weather/forecast?parameters'
         params = {
             "location": city,

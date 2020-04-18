@@ -110,8 +110,10 @@ class SoxPlayer(AbstractPlayer):
         if self.proc:
             self.onCompleteds = []
             self.proc.terminate()
+            print('1')
             if self.delete:
                 utils.check_and_delete(self.src)
+                print('2')
 
     def is_playing(self):
         return self.playing
