@@ -1,5 +1,5 @@
 # -*- coding: utf-8-*-
-import pkgutil
+import pkgutil,os
 from . import constants
 from . import config
 from robot import logging
@@ -58,6 +58,8 @@ def init_plugins(con):
         nameSet.add(plugin.SLUG)
 
         # whether a plugin is enabled
+        if isinstance(plugin.SLUG, str) and plugin.SLUG[0] != '/':
+            plugin.SLUG=os.path.join('/',plugin.SLUG)
         if config.has(plugin.SLUG) and 'enable' in config.get(plugin.SLUG):
             if not config.get(plugin.SLUG)['enable']:
                 logger.info("插件 {} 已被禁用".format(name))

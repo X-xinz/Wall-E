@@ -17,7 +17,7 @@ logpath = os.path.join(ll,'wukong.log')
 def getLogger(name):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(filename)s - %(funcName)s - line %(lineno)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(name)
-    logger.setLevel(DEBUG)
+    logger.setLevel(INFO)
     
     # 1MB = 1024 * 1024 bytes
     file_handler = RotatingFileHandler(logpath, maxBytes=1024*1024,backupCount=5)

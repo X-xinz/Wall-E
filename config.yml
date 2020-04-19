@@ -39,10 +39,11 @@ xunfei_API:
 
 tuling:
   api_key: 'e2cd5cabca5a40618b53779b5fe197c5'
+
 emotibot:
   active_mode: 'False'
-  appid: '32ee80dddb36f1dc5356517503b3f55e'
-
+  #appid: '32ee80dddb36f1dc5356517503b3f55e'
+  appid: '979348e0a6894ead38ce73ff45c23cab'
 baidu_asr:
   api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
   secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
@@ -93,4 +94,11 @@ email:
 
 #百度FM
 baidufm:
-    channel: 14
+  enable: false
+  channel: 14
+
+vol:
+  enable: 'False'
+
+poem:
+  enable: false
