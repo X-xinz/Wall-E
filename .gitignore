@@ -114,3 +114,4 @@ result.mp3
 .gitignore
 robot/__pycache__/
 robot/__pycache__/AI.cpython-37.pyc
+outfile/response.db
