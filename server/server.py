@@ -154,9 +154,14 @@ def make_app():
 app = make_app()
 
 def start_server():
-    asyncio.set_event_loop(asyncio.new_event_loop())
-    app.listen(config.get('/server/port', 5000))
-    tornado.ioloop.IOLoop.current().start()
+    if config.get('/server/enable', False):
+        port = config.get('/server/port', '5000')
+        try:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+            app.listen(int(port))
+            tornado.ioloop.IOLoop.instance().start()
+        except Exception as e:
+            logger.critical('服务器启动失败: {}'.format(e))
 
 def run(con):
     global conversation

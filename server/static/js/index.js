@@ -70,13 +70,13 @@ $(function() {
             success: function(res) {
                 var data = JSON.parse(res);
                 if(data.code == 0) {
-                    console.log('指令发送成功');
+                    toastr.log('指令发送成功');
                 }else{
-                    console.error('指令送发失败');
+                    toastr.error('指令送发失败');
                 }
             },
             error:function() {
-                console.error('服务器异常','指令送发失败');
+                toastr.error('服务器异常','指令送发失败');
             }
         })
     });

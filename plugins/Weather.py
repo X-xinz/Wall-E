@@ -13,7 +13,7 @@ class Plugin(AbstractPlugin):
     IS_IMMERSIVE = 'False'
 
     def handle(self, query, parsed):
-        city = config.get('location', '武汉')
+        city = config.get('/location', '武汉')
         url = 'https://free-api.heweather.net/s6/weather/forecast?parameters'
         params = {
             "location": city,
