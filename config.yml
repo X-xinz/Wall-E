@@ -43,7 +43,8 @@ tuling:
 emotibot:
   active_mode: 'False'
   #appid: '32ee80dddb36f1dc5356517503b3f55e'
-  appid: '979348e0a6894ead38ce73ff45c23cab'
+  #appid: "fcf55a5ac6b2e4aebe6e9d075ffda1de"
+  appid: '11240fc9f6472a273d24bdae4deedc39'
 baidu_asr:
   api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
   secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
@@ -94,7 +95,7 @@ email:
 
 #百度FM
 baidufm:
-  enable: false
+  enable: ture
   channel: 14
 
 poem:

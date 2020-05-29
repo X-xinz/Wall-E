@@ -62,11 +62,11 @@ def init_plugins(con):
             plugin.SLUG=os.path.join('/',plugin.SLUG)
         if config.has(plugin.SLUG) and 'enable' in config.get(plugin.SLUG):
             if not config.get(plugin.SLUG)['enable']:
-                logger.info("插件 {} 已被禁用".format(name))
+                logger.debug("插件 {} 已被禁用".format(name))
                 continue
 
         if issubclass(mod.Plugin, AbstractPlugin):
-            logger.info("插件 {} 加载成功 ".format(name))
+            logger.debug("插件 {} 加载成功 ".format(name))
             _plugins_query.append(plugin)
 
     def sort_priority(m):
