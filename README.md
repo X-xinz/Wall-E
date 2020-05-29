@@ -21,15 +21,10 @@ websocket          0.2.1
 websocket-client   0.57.0 
 wrapt              1.11.2    
  
-
-
 ## Mac系统安装homebrew
-安装脚本：（来源：<iframe src="//player.bilibili.com/player.html?aid=583048055&bvid=BV1bz4y1R7CS&cid=186470167&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>）
+安装脚本：（来源：https://www.bilibili.com/video/BV1bz4y1R7CS/）
 /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
 
-``` bash
-source start.sh
-```
 ## 来源连接
 wukong-robot介绍https://wukong.hahack.com/#/
 
