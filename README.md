@@ -23,6 +23,7 @@ wrapt              1.11.2
  
 ## Mac系统安装homebrew
 安装脚本：（来源：https://www.bilibili.com/video/BV1bz4y1R7CS/）
+
 /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
 
 ## 来源连接
