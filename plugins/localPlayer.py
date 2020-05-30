@@ -23,7 +23,7 @@ class Plugin(AbstractPlugin):
         if self.song_List == None:
             logger.error('{}插件配置有误'.format(self.song_List))
         logger.info('本地音乐列表:{}'.format(self.showlist))
-        return MusicPlayer(self.song_List, self.showlist, self)
+        return MusicPlayer(self.song_List, self)
 
     def handle(self, text, parsed):
         if not self.player:
@@ -33,7 +33,6 @@ class Plugin(AbstractPlugin):
             self.say('本地音乐目录为空，请添加音乐后重试')
             return
         if self.nlu.hasIntent(parsed, 'MUSICRANK'):
-
             self.player.play()
         elif self.nlu.hasIntent(parsed, 'CHANGE_TO_NEXT'):
             self.player.next()

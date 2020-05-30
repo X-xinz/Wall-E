@@ -13,12 +13,12 @@ has_init = False
 
 def init():
     global _config, has_init
-    with open(constants.CONFIG_PATH, 'r') as f:
+    with open(constants.CONFIG_PATH, "r") as f:
         _config = yaml.safe_load(f)
     has_init = True
 
 
-def get_path(items, default=None):
+def get_path(items, default=None, warm=False):
     global _config
     curConfig = _config
     if isinstance(items, str) and items[0] == '/':
@@ -27,7 +27,12 @@ def get_path(items, default=None):
         if key in curConfig:
             curConfig = curConfig[key]
         else:
-            logger.warning('没有找到配置{},使用默认值{}'.format('/'.join(items), default))
+            if warm:
+                logger.warming("/%s not specified in profile, defaulting to "
+                             "'%s'", '/'.join(items), default)
+            else:
+                logger.debug("/%s not specified in profile, defaulting to "
+                             "'%s'", '/'.join(items), default)
             return default
     return curConfig
 
@@ -45,7 +50,7 @@ def has_path(items):
     return True
 
 
-def get(item, default=None):
+def get(item='', default=None, warm=False):
     """
     获取某个配置
 
@@ -53,12 +58,23 @@ def get(item, default=None):
     :param default::默认值（可选）
     :return:返回配置值，无则返回一个默认值
     """
-    global _config, has_init
+    global has_init
     if not has_init:
         init()
     if not item:
         return _config
-    return get_path(item, default)
+    if item[0] == '/':
+        return get_path(item, default, warm)
+    try:
+        return _config[item]
+    except KeyError:
+        if warm:
+            logger.warming("%s not specified in profile, defaulting to '%s'",
+                         item, default)
+        else:
+            logger.debug("%s not specified in profile, defaulting to '%s'",
+                         item, default)
+        return default
 
 
 def has(item):

@@ -127,26 +127,23 @@ class MusicPlayer(SoxPlayer):
     """
     SLUG = 'MusicPlayer'
 
-    def __init__(self, playlist, showlist, plugin, **kwargs):
+    def __init__(self, playlist,  plugin, **kwargs):
         super(MusicPlayer, self).__init__(**kwargs)
         self.playlist = playlist
-        self.showlist = showlist
         self.plugin = plugin
-        self.idx = random.randint(0, len(self.playlist))
+        self.idx = 0
         self.pausing = False
         self.last_paused = None
 
     def update_playlist(self, playlist, showlist):
         super().stop()
         self.playlist = playlist
-        self.showlist = showlist
-        self.idx = random.randint(0, len(self.playlist))
+        self.idx = 0
         self.play()
 
     def play(self):
         logger.debug('MusicPlayer play')
-        path = self.playlist[(self.idx)-1]
-        logger.info('即将为您播放{}'.format(self.showlist[self.idx - 1]))
+        path = self.playlist[self.idx]
         super().stop()
         super().play(path, delete=False, onCompleted=self.next)
 

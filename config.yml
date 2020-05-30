@@ -100,3 +100,11 @@ baidufm:
 
 poem:
   enable: ture
+
+webserver:
+  webport: 8080
+
+/NeteaseMusic:
+    account: '2381324877@qq.com'  # 网易云音乐账号
+    #密码的 md5，可以用 python3 wukong.py md5 "密码" 获得
+    md5pass: 'f35f2aaa1290e7802802b64cfc014253' 
