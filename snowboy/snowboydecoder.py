@@ -54,11 +54,6 @@ class RingBuffer(object):
         self._buf.clear()
         return tmp
 
-
-def ding_callback():
-    play_audio_file()
-
-
 def play_audio_file(fname=DETECT_DING):
     """Simple callback function to play a wave file. By default it plays
     a Ding sound.
@@ -68,7 +63,8 @@ def play_audio_file(fname=DETECT_DING):
     """
     ding_wav = wave.open(fname, 'rb')
     ding_data = ding_wav.readframes(ding_wav.getnframes())
-    audio = pyaudio.PyAudio()
+    with no_alsa_error():
+        audio = pyaudio.PyAudio()
     stream_out = audio.open(
         format=audio.get_format_from_width(ding_wav.getsampwidth()),
         channels=ding_wav.getnchannels(),
@@ -80,7 +76,125 @@ def play_audio_file(fname=DETECT_DING):
     stream_out.close()
     audio.terminate()
 
+class ActiveListener(object):
+    """ Active Listening with VAD """
+    def __init__(self, decoder_model,
+                 resource=RESOURCE_FILE):
+        logger.debug("activeListen __init__()")
+        self.recordedData = []
+        model_str = ",".join(decoder_model)
+        self.detector = snowboydetect.SnowboyDetect(
+            resource_filename=resource.encode(), model_str=model_str.encode())
+        self.ring_buffer = RingBuffer(
+            self.detector.NumChannels() * self.detector.SampleRate() * 5)
 
+    def listen(self, interrupt_check=lambda: False, sleep_time=0.03, silent_count_threshold=15, recording_timeout=100):
+        """
+        :param interrupt_check: a function that returns True if the main loop
+                                needs to stop.
+        :param silent_count_threshold: indicates how long silence must be heard
+                                       to mark the end of a phrase that is
+                                       being recorded.
+        :param float sleep_time: how much time in second every loop waits.
+        :param recording_timeout: limits the maximum length of a recording.
+        :return: recorded file path
+        """
+        logger.debug("activeListen listen()")
+
+        self._running = True
+
+        def audio_callback(in_data, frame_count, time_info, status):
+            self.ring_buffer.extend(in_data)
+            play_data = chr(0) * len(in_data)
+            return play_data, pyaudio.paContinue
+
+        with no_alsa_error():            
+            self.audio = pyaudio.PyAudio()
+        
+        logger.debug('opening audio stream')
+
+        try:
+            self.stream_in = self.audio.open(
+                input=True, output=False,
+                format=self.audio.get_format_from_width(
+                    self.detector.BitsPerSample() / 8),
+                channels=self.detector.NumChannels(),
+                rate=self.detector.SampleRate(),
+                frames_per_buffer=2048,
+                stream_callback=audio_callback)
+        except Exception as e:
+            logger.critical(e)
+            return 
+
+        logger.debug('audio stream opened')
+
+        if interrupt_check():
+            logger.debug("detect voice return")
+            return
+
+        silentCount = 0
+        recordingCount = 0
+
+        logger.debug("begin activeListen loop")
+        
+        while self._running is True:
+
+            if interrupt_check():
+                logger.debug("detect voice break")
+                break
+            data = self.ring_buffer.get()
+            if len(data) == 0:
+                time.sleep(sleep_time)
+                continue
+            
+            status = self.detector.RunDetection(data)
+            if status == -1:
+                logger.warning("Error initializing streams or reading audio data")
+                
+            stopRecording = False
+            if recordingCount > recording_timeout:
+                stopRecording = True
+            elif status == -2: #silence found
+                if silentCount > silent_count_threshold:
+                    stopRecording = True
+                else:
+                    silentCount = silentCount + 1
+            elif status == 0: #voice found
+                silentCount = 0
+
+            if stopRecording == True:
+                return self.saveMessage()
+
+            recordingCount = recordingCount + 1
+            self.recordedData.append(data)
+
+        logger.debug("finished.")
+
+
+    def saveMessage(self):
+        """
+        Save the message stored in self.recordedData to a timestamped file.
+        """
+        filename = os.path.join(constants.TEMP_PATH, 'output' + str(int(time.time())) + '.wav')
+        data = b''.join(self.recordedData)
+
+        #use wave to save data
+        wf = wave.open(filename, 'wb')
+        wf.setnchannels(self.detector.NumChannels())
+        wf.setsampwidth(self.audio.get_sample_size(
+            self.audio.get_format_from_width(self.detector.BitsPerSample() / 8)))
+        wf.setframerate(self.detector.SampleRate())
+        wf.writeframes(data)
+        wf.close()
+        logger.debug("finished saving: " + filename)
+
+        self.stream_in.stop_stream()
+        self.stream_in.close()
+        self.audio.terminate()
+        
+        return filename
+    
+    
 class HotwordDetector(object):
     """
     Snowboy decoder to detect whether a keyword specified by `decoder_model`
