@@ -16,11 +16,11 @@ six                1.14.0
 urllib3            1.25.8    
 PyAudio            0.2.11    
 PyYAML             5.3  
-tornado            5.1.1 
+tornado            5.1.1    
 websocket          0.2.1    
-websocket-client   0.57.0
-python-dateutil    2.8.1
-wrapt              1.11.2    
+websocket-client   0.57.0    
+python-dateutil    2.8.1    
+wrapt              1.11.2        
  
 ## Mac系统安装homebrew
 安装脚本：（来源：https://www.bilibili.com/video/BV1bz4y1R7CS/）
