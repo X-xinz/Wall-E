@@ -46,13 +46,13 @@ emotibot:
   #appid: "fcf55a5ac6b2e4aebe6e9d075ffda1de"
   appid: '11240fc9f6472a273d24bdae4deedc39'
 baidu_asr:
-  api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
-  secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
+  api_key: 'GxUGSVwWVADdFGOu2EhEXaqt'
+  secret_key: 'GGHngmfFbres6h25yGb4yoz97EZPckAt'
   DEV_PID: 80001
 #1537 表示识别普通话 80001:表示极速版
 Baidu_tts:
-  api_key: 'B4YtVa1VWkn0vdIX9Yawx7Im'
-  secret_key: 'rM7vQN2YatVrhFv1MTzepDXPWpoA4h5e'
+  api_key: 'GxUGSVwWVADdFGOu2EhEXaqt'
+  secret_key: 'GGHngmfFbres6h25yGb4yoz97EZPckAt'
   SPD: 5                  
   PIT: 5                  
   VOL: 5                 
